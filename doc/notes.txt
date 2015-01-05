@@ -1,0 +1,12 @@
+plan				calendar
+	blocks			calendar-select
+		MWF-830
+	rooms			
+		201
+	teachers
+		J. Smith
+	classes
+		Math 30
+	students
+		
+	

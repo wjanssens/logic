@@ -8,9 +8,23 @@
 	<changeSet id="create scenario" author="wj">
 		<createTable tableName="scenario" remarks="represents a year, semester, or quarter">
 			<column name="id" type="int">
-				<constraints primaryKey="true" nullable="false" primaryKeyName="pk_semester"/>
+				<constraints primaryKey="true" nullable="false" primaryKeyName="pk_scenario"/>
 			</column>
 			<column name="name" type="varchar(50)" remarks="i.e. school name 2015-1">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="create resource type" author="wj">
+		<createTable tablename="resource_type">
+			<column name="id" type="int">
+				<constraints primaryKey="true" nullable="false" primaryKeyName="pk_resource_type"/>
+			</column>
+			<column name="scenario_id" type="int">
+				<constraints foreignKeyName="fk_resource_scenario" references="scenario(id)"/>
+			</column>
+			<column name="name" type="varchar(50)" remarks="the type of the resource type (i.e. class)">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
@@ -21,35 +35,32 @@
 			<column name="id" type="int">
 				<constraints primaryKey="true" nullable="false" primaryKeyName="pk_block"/>
 			</column>
-			<column name="scenario_id" type="int">
-				<constraints foreignKeyName="fk_resource_scenario" references="scenario(id)"/>
-			</column>
-			<column name="type" type="varchar(50)" remarks="the type of the resource (i.e. class)">
-				<constraints nullable="false"/>
+			<column name="resource_type_id" type="int">
+				<constraints foreignKeyName="fk_resource_resource_type" references="resource_type(id)"/>
 			</column>
 			<column name="name" type="varchar(50)" remarks="the name of the resource (i.e. Math 101)">
 				<constraints nullable="false"/>
 			</column>
 			<!-- some resources may be shown on a calendar -->
-			<column name="starts_at" type="date" remarks="a starting date"/>
-			<column name="ends_at" type="date" remarks="an ending date"/>
+			<column name="starts_on" type="date" remarks="a starting date"/>
+			<column name="ends_on" type="date" remarks="an ending date"/>
 			<column name="at" type="varchar(50)" remarks="a cron expression denoting one or more periods period in time (e.g. 0 8 * * MON,WED,FRI *)"/>
-			<column name="duration" type="varchar(50)" remarks="an expression denoting the length of time (e.g. PT1H)"/>
+			<column name="duration" type="varchar(50)" remarks="an iso8601 expression denoting the length of time (e.g. PT1H)"/>
 		</createTable>
 	</changeSet>
 	
 	<changeSet id="create rule" author="wj">
-		<createTable tableName="rule" remarks="rules governing two resources">
+		<createTable tableName="rule" remarks="truth value for the intersection of two resources">
 			<column name="a" type="int">
 				<constraints primaryKey="true" nullable="false" foreignKeyName="fk_rule_resource_a" references="resource(id)"/>
 			</column>
 			<column name="b" type="int">
 				<constraints primaryKey="true" nullable="false" foreignKeyName="fk_rule_resource_b" references="resource(id)"/>
 			</column>
-			<column name="set" type="char(1)" defaultValue="N" remarks="Y if the two resources must be together, N if they must not be together">
+			<column name="set" type="char(1)" defaultValue="N" remarks="T, F">
 				<constraints nullable="false"/>
 			</column>
-			<!-- there is an implied rule in the system that two resources of the same type can not be together -->
+			<!-- there are automatically implied rules in the system that two resources of the same type can not be together -->
 		</createTable>
 	</changeSet>
 	

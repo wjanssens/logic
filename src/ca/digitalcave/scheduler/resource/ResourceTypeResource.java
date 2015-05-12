@@ -1,5 +1,5 @@
 package ca.digitalcave.scheduler.resource;
 
-public class ClassResource {
+public class ResourceTypeResource {
 
 }

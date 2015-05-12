@@ -5,175 +5,51 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-	<changeSet id="create plan" author="wj">
-		<createTable tableName="plan" remarks="represents a year, semester, or quarter">
+	<changeSet id="create scenario" author="wj">
+		<createTable tableName="scenario" remarks="represents a year, semester, or quarter">
 			<column name="id" type="int">
 				<constraints primaryKey="true" nullable="false" primaryKeyName="pk_semester"/>
 			</column>
 			<column name="name" type="varchar(50)" remarks="i.e. school name 2015-1">
 				<constraints nullable="false"/>
 			</column>
-			<column name="effective_on" type="date"/>
-			<column name="expires_on" type="date"/>
-			<column name="dirty" type="char(1)" defaultValue="Y" remarks="some element of the plan has changed since the schedule was generated"/>
-			<column name="role" type="varchar(50)" remarks="the role requires to view/edit this plan"/>
 		</createTable>
 	</changeSet>
 	
-	<changeSet id="create block" author="wj">
-		<createTable tableName="block" remarks="the blocks for the plan">
+	<changeSet id="create resource" author="wj">
+		<createTable tableName="resource" remarks="resources such as rooms, teachers, classes, students, grade">
 			<column name="id" type="int">
 				<constraints primaryKey="true" nullable="false" primaryKeyName="pk_block"/>
 			</column>
-			<column name="plan_id" type="int">
-				<constraints foreignKeyName="fk_block_plan" references="plan(id)"/>
+			<column name="scenario_id" type="int">
+				<constraints foreignKeyName="fk_resource_scenario" references="scenario(id)"/>
 			</column>
-			<column name="name" type="varchar(50)" remarks="i.e. MWF 830">
+			<column name="type" type="varchar(50)" remarks="the type of the resource (i.e. class)">
 				<constraints nullable="false"/>
 			</column>
-		</createTable>
-	</changeSet>
-	
-	<changeSet id="create room" author="wj">
-		<createTable tableName="room" remarks="the rooms for the plan">
-			<column name="id" type="int">
-				<constraints primaryKey="true" nullable="false" primaryKeyName="pk_room"/>
-			</column>
-			<column name="plan_id" type="int">
-				<constraints foreignKeyName="fk_room_plan" references="plan(id)"/>
-			</column>
-			<column name="name" type="varchar(50)">
+			<column name="name" type="varchar(50)" remarks="the name of the resource (i.e. Math 101)">
 				<constraints nullable="false"/>
 			</column>
+			<!-- some resources may be shown on a calendar -->
+			<column name="starts_at" type="date" remarks="a starting date"/>
+			<column name="ends_at" type="date" remarks="an ending date"/>
+			<column name="at" type="varchar(50)" remarks="a cron expression denoting one or more periods period in time (e.g. 0 8 * * MON,WED,FRI *)"/>
+			<column name="duration" type="varchar(50)" remarks="an expression denoting the length of time (e.g. PT1H)"/>
 		</createTable>
 	</changeSet>
 	
-	<changeSet id="create teacher" author="wj">
-		<createTable tableName="teacher" remarks="the teachers for the plan">
-			<column name="id" type="int">
-				<constraints primaryKey="true" nullable="false" primaryKeyName="pk_teacher"/>
+	<changeSet id="create rule" author="wj">
+		<createTable tableName="rule" remarks="rules governing two resources">
+			<column name="a" type="int">
+				<constraints primaryKey="true" nullable="false" foreignKeyName="fk_rule_resource_a" references="resource(id)"/>
 			</column>
-			<column name="plan_id" type="int">
-				<constraints foreignKeyName="fk_teacher_plan" references="plan(id)"/>
+			<column name="b" type="int">
+				<constraints primaryKey="true" nullable="false" foreignKeyName="fk_rule_resource_b" references="resource(id)"/>
 			</column>
-			<column name="name" type="varchar(50)">
+			<column name="set" type="char(1)" defaultValue="N" remarks="Y if the two resources must be together, N if they must not be together">
 				<constraints nullable="false"/>
 			</column>
-			<column name="min_blocks" type="smallint" remarks="minimum allocation in blocks (i.e. 6)"/>
-			<column name="max_blocks" type="smallint" remarks="maximum allocation in blocks (i.e. 8)"/>
-		</createTable>
-	</changeSet>
-	
-	<changeSet id="create class" author="wj">
-		<createTable tableName="class" remarks="the classes in a plan">
-			<column name="id" type="int">
-				<constraints primaryKey="true" nullable="false" primaryKeyName="pk_class"/>
-			</column>
-			<column name="plan_id" type="int">
-				<constraints foreignKeyName="fk_class_plan" references="plan(id)"/>
-			</column>
-			<column name="name" type="varchar(50)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="grade" type="smallint"/>
-			<column name="num_blocks" type="smallint" remarks="number of blocks to occupy (i.e. 1)"/>
-		</createTable>
-	</changeSet>
-	
-	<changeSet id="create student" author="wj">
-		<createTable tableName="student" remarks="the studends in a plan">
-			<column name="id" type="int">
-				<constraints primaryKey="true" nullable="false" primaryKeyName="pk_student"/>
-			</column>
-			<column name="plan_id" type="int">
-				<constraints foreignKeyName="fk_student_plan" references="plan(id)"/>
-			</column>
-			<column name="name" type="varchar(50)">
-				<constraints nullable="false"/>
-			</column>
-		</createTable>
-	</changeSet>
-	
-	<changeSet id="create teacher_class" author="wj">
-		<createTable tableName="teacher_class" remarks="the classes a teacher can teach">
-			<column name="teacher_id" type="int">
-				<constraints foreignKeyName="fk_teacher_class_teacher" references="teacher(id)"/>
-			</column>
-			<column name="class_id" type="int">
-				<constraints foreignKeyName="fk_teaches_class_class" references="class(id)"/>
-			</column>
-		</createTable>
-	</changeSet>
-	
-	<changeSet id="create room_class" author="wj">
-		<createTable tableName="teacher_class" remarks="the classes a room can accommodate">
-			<column name="room_id" type="int">
-				<constraints foreignKeyName="fk_room_class_room" references="room(id)"/>
-			</column>
-			<column name="class_id" type="int">
-				<constraints foreignKeyName="fk_room_class_class" references="class(id)"/>
-			</column>
-		</createTable>
-	</changeSet>
-	
-	<changeSet id="create fixture" author="wj">
-		<createTable tableName="schedule" remarks="the fixed elements of a schedule for a plan">
-			<column name="block_id">
-				<constraints foreignKeyName="fk_schedule_block" references="block(id)"/>
-			</column>
-			<column name="class_id">
-				<constraints foreignKeyName="fk_schedule_class" references="class(id)"/>
-			</column>
-			<column name="room_id">
-				<constraints foreignKeyName="fk_schedule_room" references="room(id)"/>
-			</column>
-			<column name="teacher_id">
-				<constraints foreignKeyName="fk_schedule_teacher" references="teacher(id)"/>
-			</column>
-		</createTable>
-	</changeSet>
-	
-	<changeSet id="create schedule" author="wj">
-		<createTable tableName="schedule" remarks="the schedule for a plan">
-			<column name="block_id">
-				<constraints foreignKeyName="fk_schedule_block" references="block(id)"/>
-			</column>
-			<column name="class_id">
-				<constraints foreignKeyName="fk_schedule_class" references="class(id)"/>
-			</column>
-			<column name="room_id">
-				<constraints foreignKeyName="fk_schedule_room" references="room(id)"/>
-			</column>
-			<column name="teacher_id">
-				<constraints foreignKeyName="fk_schedule_teacher" references="teacher(id)"/>
-			</column>
-		</createTable>
-	</changeSet>
-	
-	<changeSet id="create schedule_student" author="wj">
-		<createTable tableName="schedule_student">
-			<column name="schedule_id">
-				<constraints foreignKeyName="fk_schedule_student_schedule" references="schedule(id)"/>
-			</column>
-			<column name="student_id">
-				<constraints foreignKeyName="fk_schedule_student_student" references="student(id)"/>
-			</column>
-		</createTable>
-	</changeSet>
-	
-	<changeSet id="create block_time">
-		<createTable tableName="block_time" remarks="optional information used to generate a caldav schedule">
-			<column name="id" type="int">
-				<constraints primaryKey="true" nullable="false" primaryKeyName="pk_block_time"/>
-			</column>
-			<column name="block_id">
-				<constraints foreignKeyName="fk_block_time_block" references="block(id)"/>
-			</column>
-			<column name="effective_on" type="date" remarks="null means inherit from plan"/>
-			<column name="expires_on" type="date" remarks="null means inherit from plan"/>
-			<column name="day" type="smallint" remarks="0=sunday"/>
-			<column name="start_at" type="time"/>
-			<column name="end_at" type="time"/>
+			<!-- there is an implied rule in the system that two resources of the same type can not be together -->
 		</createTable>
 	</changeSet>
 	

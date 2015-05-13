@@ -22,7 +22,7 @@ import ca.digitalcave.logic.LogicApplication;
 import ca.digitalcave.logic.data.Id;
 import ca.digitalcave.logic.data.LogicMapper;
 
-public class ResourceResource extends ServerResource {
+public class ResourcesResource extends ServerResource {
 
 	@Override
 	protected void doInit() throws ResourceException {

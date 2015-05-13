@@ -28,10 +28,13 @@ import org.restlet.data.Method;
 import org.restlet.routing.Redirector;
 import org.restlet.routing.Router;
 
+import ca.digitalcave.logic.resource.CalendarResource;
 import ca.digitalcave.logic.resource.DefaultResource;
-import ca.digitalcave.logic.resource.ResourceResource;
+import ca.digitalcave.logic.resource.ResourcesResource;
+import ca.digitalcave.logic.resource.ScenarioResource;
 import ca.digitalcave.logic.resource.ScenariosResource;
 import ca.digitalcave.logic.resource.TypeResource;
+import ca.digitalcave.logic.resource.TypesResource;
 import ca.digitalcave.logic.util.PasswordUtil;
 import freemarker.ext.beans.BeansWrapperBuilder;
 import freemarker.template.Configuration;
@@ -51,8 +54,11 @@ public class LogicApplication extends Application {
 		final Router router = new Router();
 		router.attach("/", new Redirector(getContext(), "index.html"));
 		router.attach("/scenarios", ScenariosResource.class);
-		router.attach("/scenarios/{scenario}/types", TypeResource.class);
-		router.attach("/scenarios/{scenario}/types/{type}/resources", ResourceResource.class);
+		router.attach("/scenarios/{scenario}", ScenarioResource.class);
+		router.attach("/scenarios/{scenario}/calendar", CalendarResource.class);
+		router.attach("/scenarios/{scenario}/types", TypesResource.class);
+		router.attach("/scenarios/{scenario}/types/{type}", TypeResource.class);
+		router.attach("/scenarios/{scenario}/types/{type}/resources", ResourcesResource.class);
 		router.attachDefault(DefaultResource.class);
 		return router;
 	}

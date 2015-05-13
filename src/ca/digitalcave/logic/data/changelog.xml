@@ -13,6 +13,13 @@
 			<column name="name" type="varchar(50)" remarks="i.e. school name 2015-1">
 				<constraints nullable="false"/>
 			</column>
+			<column name="uid" type="varchar(50)" remarks="the owning user">
+				<constraints nullable="false" foreignKeyName="fk_scenario_user" references="user(uid)"/>
+			</column>
+			<column name="gid" type="varchar(50)" remarks="the owning group">
+				<constraints nullable="true" foreignKeyName="fk_scenario_group" references="user(gid)"/>
+			</column>
+			<column name="permissions" type="smallint" remarks="unix style permissions (ugo/rwx)"/>
 		</createTable>
 	</changeSet>
 	
@@ -66,20 +73,20 @@
 	
 	<changeSet id="create user" author="wj">
 		<createTable tableName="users">
-			<column name="uid" type="varchar(20)">
+			<column name="uid" type="varchar(50)">
 				<constraints primaryKey="true" nullable="false" primaryKeyName="pk_user"/>
 			</column>
 			<column name="credentials" type="varchar(255)"/>
 		</createTable>
 	</changeSet>
 	
-	<changeSet id="create role" author="wj">
-		<createTable tableName="role">
-			<column name="uid">
-				<constraints nullable="false" foreignKeyName="fk_role_user" references="user(uid)"/>
+	<changeSet id="create group" author="wj">
+		<createTable tableName="group" remarks="group membership">
+			<column name="gid" type="varchar(50)">
+				<constraints nullable="false" primaryKey="true"/>
 			</column>
-			<column name="role" type="varchar(255)">
-				<constraints nullable="false"/>
+			<column name="uid" type="varchar(50)">
+				<constraints nullable="false" primaryKey="true" foreignKeyName="fk_role_user" references="user(uid)"/>
 			</column>
 		</createTable>
 	</changeSet>
@@ -89,9 +96,9 @@
 			<column name="uid" value="admin"/>
 			<column name="credentials" value="password"/>
 		</insert>
-		<insert tableName="role">
+		<insert tableName="group">
+			<column name="gid" value="admin"/>
 			<column name="uid" value="admin"/>
-			<column name="role" value="admin"/>
 		</insert>
 	</changeSet>
 

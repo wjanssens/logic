@@ -1,12 +1,21 @@
-plan				calendar
-	blocks			calendar-select
-		MWF-830
-	rooms			
-		201
-	teachers
-		J. Smith
-	classes
-		Math 30
-	students
-		
-	
+{
+	"problem": {
+		"types": {
+			"Type Name": [
+				"Item Name",
+				"Item Name"
+			],
+			"Type Name": [
+				"Item Name",
+				"Item Name"
+			]
+		}
+	},
+	"clauses": {
+		[ "Type Name", "Item Name", true, "Type Name", "Item Name" ],
+	},
+	"solution": {
+		[ "Type Name", "Item Name", true, "Type Name", "Item Name" ],
+	}
+}
+

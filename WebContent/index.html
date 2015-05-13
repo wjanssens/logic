@@ -11,26 +11,34 @@
 require([
 	"dijit/layout/BorderContainer", 
 	"dijit/layout/ContentPane", 
+	"dijit/Menu",
+	"dijit/MenuItem",
+	"dijit/MenuBar",
+	"dijit/MenuBarItem",
+	"dijit/PopupMenuBarItem",
 	"dojo/domReady!"
-], function(BorderContainer, ContentPane) {
+], function(BorderContainer, ContentPane, Menu, MenuItem, MenuBar, MenuBarItem, PopupMenuBarItem) {
 	var appLayout = new BorderContainer({
 		design: "headline"
 	}, 'appLayout');
 	
-	appLayout.addChild(
-		new ContentPane({
-			region: "center",
-			content: "Header content (top)"
-		})
-	);
-	appLayout.addChild(
-		new ContentPane({
-			region: "left",
-			style: "256px",
-			content: "Sidebar content (left)",
-			splitter: true
-		})
-	);
+	var menubar = new MenuBar({
+		region: "top"
+	});
+	appLayout.addChild(menubar);
+	menubar.addChild(new MenuBarItem({
+		label: "Test"
+	}))
+	appLayout.addChild(new ContentPane({
+		region: "center",
+		content: "Header content (top)"
+	}));
+	appLayout.addChild(new ContentPane({
+		region: "left",
+		style: "256px",
+		content: "Sidebar content (left)",
+		splitter: true
+	}));
 	appLayout.startup();
 });
 		</script>

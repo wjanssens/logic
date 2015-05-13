@@ -1,4 +1,4 @@
-package ca.digitalcave.scheduler.util;
+package ca.digitalcave.logic.util;
 
 public class PasswordUtil {
 

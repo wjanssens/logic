@@ -1,8 +1,8 @@
-package ca.digitalcave.scheduler.data;
+package ca.digitalcave.logic.data;
 
 import org.apache.ibatis.session.ResultHandler;
 
-public interface RoomMapper {
+public interface LogicMapper {
 	void select(ResultHandler handler);
 	void insert(Id<Integer> id, String name);
 	void update(int id, String name);

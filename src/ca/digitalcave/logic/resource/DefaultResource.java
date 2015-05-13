@@ -1,4 +1,4 @@
-package ca.digitalcave.scheduler.resource;
+package ca.digitalcave.logic.resource;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import org.restlet.representation.Variant;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import ca.digitalcave.scheduler.SchedulerApplication;
+import ca.digitalcave.logic.LogicApplication;
 
 public class DefaultResource extends ServerResource {
 
@@ -28,7 +28,7 @@ public class DefaultResource extends ServerResource {
 	
 	@Override
 	protected Representation get(Variant variant) throws ResourceException {
-		final SchedulerApplication application = (SchedulerApplication) getApplication();
+		final LogicApplication application = (LogicApplication) getApplication();
 		final String path = new Reference(getRootRef(), getOriginalRef()).getRemainingPart(true, false);
 				
 		if (path.startsWith("WEB-INF")) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND);

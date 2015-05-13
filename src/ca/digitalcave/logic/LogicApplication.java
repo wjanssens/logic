@@ -1,4 +1,4 @@
-package ca.digitalcave.scheduler;
+package ca.digitalcave.logic;
 
 import java.io.InputStream;
 import java.sql.Connection;
@@ -18,6 +18,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.codehaus.jackson.map.MappingJsonFactory;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.restlet.Application;
 import org.restlet.Context;
 import org.restlet.Request;
@@ -26,26 +28,21 @@ import org.restlet.data.Method;
 import org.restlet.routing.Redirector;
 import org.restlet.routing.Router;
 
-import ca.digitalcave.scheduler.resource.DefaultResource;
-import ca.digitalcave.scheduler.resource.IndexResource;
-import ca.digitalcave.scheduler.resource.PlansResource;
-import ca.digitalcave.scheduler.util.PasswordUtil;
-
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.MappingJsonFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import ca.digitalcave.logic.resource.DefaultResource;
+import ca.digitalcave.logic.resource.ResourceResource;
+import ca.digitalcave.logic.resource.ScenariosResource;
+import ca.digitalcave.logic.resource.TypeResource;
+import ca.digitalcave.logic.util.PasswordUtil;
 import freemarker.ext.beans.BeansWrapperBuilder;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
 
-public class SchedulerApplication extends Application {
+public class LogicApplication extends Application {
 	
 	private static final Version FM_VERSION = new Version(2, 3, 21);
 	private final Properties properties = new Properties();
-	private final ObjectMapper objectMapper = new ObjectMapper();
-	private final MappingJsonFactory jsonFactory = new MappingJsonFactory(jsonMapper);
+	private final MappingJsonFactory jsonFactory = new MappingJsonFactory(new ObjectMapper());
 	private final Configuration fmConfig = new Configuration(FM_VERSION);
 	private SqlSessionFactory sqlSessionFactory;
 
@@ -53,8 +50,9 @@ public class SchedulerApplication extends Application {
 	public Restlet createInboundRoot() {
 		final Router router = new Router();
 		router.attach("/", new Redirector(getContext(), "index.html"));
-		router.attach("/plans", PlansResource.class);
-		router.attach("/rooms", RoomsResource.class);
+		router.attach("/scenarios", ScenariosResource.class);
+		router.attach("/scenarios/{scenario}/types", TypeResource.class);
+		router.attach("/scenarios/{scenario}/types/{type}/resources", ResourceResource.class);
 		router.attachDefault(DefaultResource.class);
 		return router;
 	}
@@ -99,7 +97,7 @@ public class SchedulerApplication extends Application {
 	}
 	
 	public ObjectMapper getObjectMapper() {
-		return objectMapper;
+		return jsonFactory.getCodec();
 	}
 	
 	public MappingJsonFactory getJsonFactory() {

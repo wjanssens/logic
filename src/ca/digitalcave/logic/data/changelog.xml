@@ -17,7 +17,7 @@
 	</changeSet>
 	
 	<changeSet id="create resource type" author="wj">
-		<createTable tablename="resource_type">
+		<createTable tableName="resource_type">
 			<column name="id" type="int">
 				<constraints primaryKey="true" nullable="false" primaryKeyName="pk_resource_type"/>
 			</column>
@@ -35,8 +35,8 @@
 			<column name="id" type="int">
 				<constraints primaryKey="true" nullable="false" primaryKeyName="pk_block"/>
 			</column>
-			<column name="resource_type_id" type="int">
-				<constraints foreignKeyName="fk_resource_resource_type" references="resource_type(id)"/>
+			<column name="type_id" type="int">
+				<constraints foreignKeyName="fk_resource_type" references="resource_type(id)"/>
 			</column>
 			<column name="name" type="varchar(50)" remarks="the name of the resource (i.e. Math 101)">
 				<constraints nullable="false"/>

@@ -1,4 +1,4 @@
-package ca.digitalcave.scheduler.resource;
+package ca.digitalcave.logic.resource;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.SqlSession;
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonNode;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
@@ -16,14 +18,11 @@ import org.restlet.representation.WriterRepresentation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import ca.digitalcave.scheduler.SchedulerApplication;
-import ca.digitalcave.scheduler.data.Id;
-import ca.digitalcave.scheduler.data.RoomMapper;
+import ca.digitalcave.logic.LogicApplication;
+import ca.digitalcave.logic.data.Id;
+import ca.digitalcave.logic.data.LogicMapper;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-
-public class RoomsResource extends ServerResource {
+public class ResourceResource extends ServerResource {
 
 	@Override
 	protected void doInit() throws ResourceException {
@@ -33,14 +32,14 @@ public class RoomsResource extends ServerResource {
 	
 	@Override
 	protected Representation get(Variant variant) throws ResourceException {
-		final SchedulerApplication application = (SchedulerApplication) getApplication();
+		final LogicApplication application = (LogicApplication) getApplication();
 		return new WriterRepresentation(MediaType.APPLICATION_JSON) {
 			@Override
 			public void write(Writer w) throws IOException {
-				final JsonGenerator g = application.getJsonFactory().createGenerator(w);
+				final JsonGenerator g = application.getJsonFactory().createJsonGenerator(w);
 				final SqlSession session = application.getSqlSessionFactory().openSession();
 				try {
-					final RoomMapper mapper = session.getMapper(RoomMapper.class);
+					final LogicMapper mapper = session.getMapper(LogicMapper.class);
 					g.writeStartObject();
 					g.writeBooleanField("success", true);
 					g.writeArrayFieldStart("data");
@@ -71,13 +70,13 @@ public class RoomsResource extends ServerResource {
 	
 	@Override
 	protected Representation post(Representation entity, Variant variant) throws ResourceException {
-		final SchedulerApplication application = (SchedulerApplication) getApplication();
+		final LogicApplication application = (LogicApplication) getApplication();
 		final SqlSession session = application.getSqlSessionFactory().openSession();
 		try {
 			final JsonNode rootNode = application.getObjectMapper().readTree(entity.getReader());
 			final Id<Integer> id = new Id<Integer>();
-			final String name = rootNode.get("name").asText("Untitled");
-			session.getMapper(RoomMapper.class).insert(id, name);
+			final String name = rootNode.get("name").asText();
+			session.getMapper(LogicMapper.class).insert(id, name);
 			return new StringRepresentation("{sucess:true}", MediaType.APPLICATION_JSON);
 		} catch (IOException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY);

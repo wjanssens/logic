@@ -1,4 +1,4 @@
-package ca.digitalcave.scheduler.data;
+package ca.digitalcave.logic.data;
 
 public class Id<T> {
 	private T value;

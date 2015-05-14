@@ -99,7 +99,7 @@ public class Puzzle {
 						c[i] = 1+pairs.indexOf(new Pair(a,b));
 						System.out.print(new Pair(a,b));
 					}
-					solver.addClause(new VecInt(c));
+					solver.addExactly(new VecInt(c), 1);
 					System.out.println();
 				}
 				for (String a : f.getValue()) {
@@ -109,8 +109,8 @@ public class Puzzle {
 						c[i] = 1+pairs.indexOf(new Pair(a,b));
 						System.out.print(new Pair(a,b));
 					}
-					solver.addClause(new VecInt(c));
-					System.out.println("/n");
+					solver.addExactly(new VecInt(c), 1);
+					System.out.println();
 				}
 			}
 		}

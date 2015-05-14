@@ -1,28 +1,24 @@
 {
 	"problem": {
-		"Friend": [
-			"Judy", "Michael", "Norma", "Robin"
+		"Buyer": [
+			"Glyn", "Harry", "Ian", "Jamie", "Kevin"
 		],
-		"Gift": [
-			"Book", "Chocolates", "Painting", "Vase"
+		"CD": [
+			"Caught Out", "Friends", "Our World", "Wild Looks", "Yellow Moon"
 		],
-		"Paper": [
-			"Blue", "Shiny", "White", "Yellow"
-		],
-		"Bow": [
-			"Green", "Orange", "Pink", "Red"
+		"Band": [
+			"Girl Rock", "The Goods", "Headway", "Hi Pitch", "The Petals"
 		]
 	},
 	"clauses": [
-		{ "pair": [ "Vase", "Yellow" ], "true": true },
-		{ "pair": [ "Vase", "Judy" ], "true": false },
-		{ "pair": [ "Yellow", "Judy" ], "true": false },
-		{ "pair": [ "Judy", "Orange" ], "true": true },
-		{ "pair": [ "Shiny", "Michael" ], "true": true },
-		{ "pair": [ "Michael", "Book" ], "true": false },
-		{ "pair": [ "Painting", "Norma" ], "true": true },
-		{ "pair": [ "White", "Red" ], "true": true },
-		{ "pair": [ "Robin", "Pink" ], "true": false }
+		{ "pair": [ "Jamie", "Headway" ], "true": true },
+		{ "pair": [ "Harry", "Our World" ], "true": true },
+		{ "pair": [ "Caught Out", "Hi Pitch" ], "true": true },
+		{ "pair": [ "Caught Out", "Glyn" ], "true": false },
+		{ "pair": [ "Hi Pitch", "Glyn" ], "true": false },
+		{ "pair": [ "Ian", "Wild Looks" ], "true": true },
+		{ "pair": [ "Ian", "The Petals" ], "true": false },
+		{ "pair": [ "Girl Rock", "Yellow Moon" ], "true": true }
 	]
 }
 

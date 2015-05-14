@@ -2,7 +2,6 @@ package ca.digitalcave.logic.domain;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -90,18 +89,20 @@ public class Puzzle {
 		
 		// the clauses from the valid pair combinations
 		for (Map.Entry<String, List<String>> e : terms.entrySet()) {
-			for (Map.Entry<String, List<String>> f : terms.entrySet()) {
-				if (e.getKey().equals(f.getKey())) continue;
-				for (String a : f.getValue()) {
-					final int[] c = new int[f.getValue().size()];
+			for (String a : e.getValue()) {
+				final ArrayList<Pair> d = new ArrayList<Pair>();
+				for (Map.Entry<String, List<String>> f : terms.entrySet()) {
+				if (e.getKey().equals(f.getKey())) continue; // same category
+					final ArrayList<Pair> c = new ArrayList<Pair>();
 					for (int i = 0; i < f.getValue().size(); i++) {
-						final String b = e.getValue().get(i);
-						c[i] = 1+pairs.indexOf(new Pair(a,b));
-						System.out.print(new Pair(a,b));
+						final String b = f.getValue().get(i);
+						final Pair p = new Pair(a,b);
+						c.add(p);
+						d.add(p);
 					}
-					solver.addExactly(new VecInt(c), 1);
-					System.out.println();
+					solver.addExactly(toVecInt(c), 1);
 				}
+				solver.addExactly(toVecInt(d), terms.size() - 1);
 				System.out.println("----");
 			}
 		}
@@ -127,5 +128,14 @@ public class Puzzle {
 		} else {
 			System.out.println("not solvable");
 		}
+	}
+	
+	private VecInt toVecInt(List<Pair> l) {
+		System.out.println(l);
+		final int[] result = new int[l.size()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = 1+pairs.indexOf(l.get(i));
+		}
+		return new VecInt(result);
 	}
 }

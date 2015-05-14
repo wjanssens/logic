@@ -1,0 +1,18 @@
+{
+	"problem": {
+		"Buyer": [
+			"Harry", "Jamie"
+		],
+		"CD": [
+			"Friends", "Our World"
+		],
+		"Band": [
+			"Headway", "The Petals"
+		]
+	},
+	"clauses": [
+		{ "pair": [ "Jamie", "Headway" ], "true": true },
+		{ "pair": [ "Harry", "Our World" ], "true": true }
+	]
+}
+

@@ -19,7 +19,7 @@ import org.sat4j.specs.ISolver;
 public class Puzzle {
 
 	public static void main(String[] args) throws Exception {
-		final JsonParser p = new JsonFactory().createJsonParser(Puzzle.class.getResourceAsStream("test.json"));
+		final JsonParser p = new JsonFactory().createJsonParser(Puzzle.class.getResourceAsStream("test-abbr.json"));
 		final Puzzle puzzle = new Puzzle(p);
 		puzzle.solve();
 	}

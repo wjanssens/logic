@@ -92,19 +92,9 @@ public class Puzzle {
 		for (Map.Entry<String, List<String>> e : terms.entrySet()) {
 			for (Map.Entry<String, List<String>> f : terms.entrySet()) {
 				if (e.getKey().equals(f.getKey())) continue;
-				for (String a : e.getValue()) {
+				for (String a : f.getValue()) {
 					final int[] c = new int[f.getValue().size()];
 					for (int i = 0; i < f.getValue().size(); i++) {
-						final String b = f.getValue().get(i);
-						c[i] = 1+pairs.indexOf(new Pair(a,b));
-						System.out.print(new Pair(a,b));
-					}
-					solver.addExactly(new VecInt(c), 1);
-					System.out.println();
-				}
-				for (String a : f.getValue()) {
-					final int[] c = new int[e.getValue().size()];
-					for (int i = 0; i < e.getValue().size(); i++) {
 						final String b = e.getValue().get(i);
 						c[i] = 1+pairs.indexOf(new Pair(a,b));
 						System.out.print(new Pair(a,b));
@@ -112,6 +102,7 @@ public class Puzzle {
 					solver.addExactly(new VecInt(c), 1);
 					System.out.println();
 				}
+				System.out.println("----");
 			}
 		}
 		// the clauses from the problem

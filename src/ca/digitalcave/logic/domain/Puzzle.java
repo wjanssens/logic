@@ -19,7 +19,7 @@ import org.sat4j.specs.ISolver;
 public class Puzzle {
 
 	public static void main(String[] args) throws Exception {
-		final JsonParser p = new JsonFactory().createJsonParser(Puzzle.class.getResourceAsStream("test2.json"));
+		final JsonParser p = new JsonFactory().createJsonParser(Puzzle.class.getResourceAsStream("test.json"));
 		final Puzzle puzzle = new Puzzle(p);
 		puzzle.solve();
 	}
@@ -67,12 +67,12 @@ public class Puzzle {
 		}
 		
 		// create a List of all valid pairs;
-		for (Map.Entry<String, List<String>> e : terms.entrySet()) {
-			for (Map.Entry<String, List<String>> f : terms.entrySet()) {
-				if (e.getKey().equals(f.getKey())) continue;
-				for (String a : e.getValue()) {
-					for (String b : f.getValue()) {
-						if (a.equals(b)) continue;
+		for (Map.Entry<String, List<String>> A : terms.entrySet()) {
+			for (Map.Entry<String, List<String>> B : terms.entrySet()) {
+				if (A.getKey().equals(B.getKey())) continue; // same category
+				for (String a : A.getValue()) {
+					for (String b : B.getValue()) {
+						if (a.equals(b)) continue; // same term
 						final Pair pair = new Pair(a, b);
 						if (pairs.contains(pair)) continue;
 						pairs.add(pair);
@@ -88,22 +88,16 @@ public class Puzzle {
 //		solver.setExpectedNumberOfClauses(clauses.size());
 		
 		// the clauses from the valid pair combinations
-		for (Map.Entry<String, List<String>> e : terms.entrySet()) {
-			for (String a : e.getValue()) {
-//				final ArrayList<Pair> d = new ArrayList<Pair>();
-				for (Map.Entry<String, List<String>> f : terms.entrySet()) {
-					if (e.getKey().equals(f.getKey())) continue; // same category
-					final ArrayList<Pair> c = new ArrayList<Pair>();
-					for (int i = 0; i < f.getValue().size(); i++) {
-						final String b = f.getValue().get(i);
-						final Pair p = new Pair(a,b);
-						c.add(p);
-//						d.add(p);
+		for (Map.Entry<String, List<String>> A : terms.entrySet()) {
+			for (String a : A.getValue()) {
+				for (Map.Entry<String, List<String>> B : terms.entrySet()) {
+					if (A.getKey().equals(B.getKey())) continue; // same category
+					final ArrayList<Pair> pairs = new ArrayList<Pair>();
+					for (String b : B.getValue()) {
+						pairs.add(new Pair(a,b));
 					}
-					solver.addExactly(toVecInt(c), 1);
+					solver.addExactly(toVecInt(pairs), 1);
 				}
-//				solver.addExactly(toVecInt(d), terms.size() - 1);
-				System.out.println("----");
 			}
 		}
 		// (a,b)&(a,c)=>(b,c) where a,b,c are from different term categories

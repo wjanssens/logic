@@ -1,0 +1,24 @@
+{
+	"problem": {
+		"Buyer": [
+			"Glyn", "Harry", "Ian", "Jamie", "Kevin"
+		],
+		"CD": [
+			"Caught Out", "Friends", "Our World", "Wild Looks", "Yellow Moon"
+		],
+		"Band": [
+			"Girl Rock", "The Goods", "Headway", "Hi Pitch", "The Petals"
+		]
+	},
+	"clauses": [
+		{ "pair": [ "Jamie", "Headway" ], "true": true },
+		{ "pair": [ "Harry", "Our World" ], "true": true },
+		{ "pair": [ "Caught Out", "Hi Pitch" ], "true": true },
+		{ "pair": [ "Caught Out", "Glyn" ], "true": false },
+		{ "pair": [ "Hi Pitch", "Glyn" ], "true": false },
+		{ "pair": [ "Ian", "Wild Looks" ], "true": true },
+		{ "pair": [ "Ian", "The Petals" ], "true": false },
+		{ "pair": [ "Girl Rock", "Yellow Moon" ], "true": true }
+	]
+}
+

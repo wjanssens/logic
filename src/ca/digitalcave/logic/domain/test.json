@@ -1,24 +1,29 @@
 {
 	"problem": {
-		"Buyer": [
-			"Glyn", "Harry", "Ian", "Jamie", "Kevin"
+		"Sister": [
+			"Camilla", "Chris", "Corinne", "Cynthia"
 		],
-		"CD": [
-			"Caught Out", "Friends", "Our World", "Wild Looks", "Yellow Moon"
+		"Flowers": [
+			"Carnations", "Chrysanths", "Gladioli", "Roses"
 		],
-		"Band": [
-			"Girl Rock", "The Goods", "Headway", "Hi Pitch", "The Petals"
+		"Color": [
+			"Pink", "Red", "White", "Yellow"
+		],
+		"Sender": [
+			"Bill", "Colin", "Ross", "Sean"
 		]
 	},
 	"clauses": [
-		{ "pair": [ "Jamie", "Headway" ], "true": true },
-		{ "pair": [ "Harry", "Our World" ], "true": true },
-		{ "pair": [ "Caught Out", "Hi Pitch" ], "true": true },
-		{ "pair": [ "Caught Out", "Glyn" ], "true": false },
-		{ "pair": [ "Hi Pitch", "Glyn" ], "true": false },
-		{ "pair": [ "Ian", "Wild Looks" ], "true": true },
-		{ "pair": [ "Ian", "The Petals" ], "true": false },
-		{ "pair": [ "Girl Rock", "Yellow Moon" ], "true": true }
+		{ "pair": [ "Camilla", "Yellow" ], "true": true },
+		{ "pair": [ "Camilla", "Gladioli" ], "true": true },
+		{ "pair": [ "Gladioli", "Yellow" ], "true": true },
+		{ "pair": [ "Colin", "Red" ], "true": true },
+		{ "pair": [ "Colin", "Roses" ], "true": true },
+		{ "pair": [ "Roses", "Red" ], "true": true },
+		{ "pair": [ "Colin", "Cynthia" ], "true": false },
+		{ "pair": [ "Ross", "Chrysanths" ], "true": false },
+		{ "pair": [ "Chrysanths", "Pink" ], "true": false },
+		{ "pair": [ "Corinne", "Bill" ], "true": true }
 	]
 }
 

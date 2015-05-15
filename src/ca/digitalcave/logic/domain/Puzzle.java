@@ -19,7 +19,7 @@ import org.sat4j.specs.ISolver;
 public class Puzzle {
 
 	public static void main(String[] args) throws Exception {
-		final JsonParser p = new JsonFactory().createJsonParser(Puzzle.class.getResourceAsStream("test-abbr.json"));
+		final JsonParser p = new JsonFactory().createJsonParser(Puzzle.class.getResourceAsStream("test2.json"));
 		final Puzzle puzzle = new Puzzle(p);
 		puzzle.solve();
 	}
@@ -90,22 +90,44 @@ public class Puzzle {
 		// the clauses from the valid pair combinations
 		for (Map.Entry<String, List<String>> e : terms.entrySet()) {
 			for (String a : e.getValue()) {
-				final ArrayList<Pair> d = new ArrayList<Pair>();
+//				final ArrayList<Pair> d = new ArrayList<Pair>();
 				for (Map.Entry<String, List<String>> f : terms.entrySet()) {
-				if (e.getKey().equals(f.getKey())) continue; // same category
+					if (e.getKey().equals(f.getKey())) continue; // same category
 					final ArrayList<Pair> c = new ArrayList<Pair>();
 					for (int i = 0; i < f.getValue().size(); i++) {
 						final String b = f.getValue().get(i);
 						final Pair p = new Pair(a,b);
 						c.add(p);
-						d.add(p);
+//						d.add(p);
 					}
 					solver.addExactly(toVecInt(c), 1);
 				}
-				solver.addExactly(toVecInt(d), terms.size() - 1);
+//				solver.addExactly(toVecInt(d), terms.size() - 1);
 				System.out.println("----");
 			}
 		}
+		// (a,b)&(a,c)=>(b,c) where a,b,c are from different term categories
+		for (Map.Entry<String, List<String>> A : terms.entrySet()) {
+			for (String a : A.getValue()) {
+	 			for (Map.Entry<String, List<String>> B : terms.entrySet()) {
+					if (A.getKey().equals(B.getKey())) continue; // same category
+					for (String b : B.getValue()) {
+						for (Map.Entry<String, List<String>> C : terms.entrySet()) {
+							if (A.getKey().equals(C.getKey())) continue; // same category
+							if (B.getKey().equals(C.getKey())) continue; // same category;
+							for (String c : C.getValue()) {
+								final int p = 1 + pairs.indexOf(new Pair(a,b));
+								final int q = 1 + pairs.indexOf(new Pair(a,c));
+								final int r = 1 + pairs.indexOf(new Pair(b,c));
+								solver.addClause(new VecInt(new int[] { -p, -q, r }));
+							}
+						}
+					}
+					
+	 			}
+			}
+		}
+		
 		// the clauses from the problem
 		for (Clause clause : clauses) {
 			solver.addClause(new VecInt(new int[] { clause.getFactor() * (1+pairs.indexOf(clause.getPair())) }));

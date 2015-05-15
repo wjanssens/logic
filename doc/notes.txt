@@ -1,21 +1,15 @@
-{
-	"problem": {
-		"types": {
-			"Type Name": [
-				"Item Name",
-				"Item Name"
-			],
-			"Type Name": [
-				"Item Name",
-				"Item Name"
-			]
-		}
-	},
-	"clauses": {
-		[ "Type Name", "Item Name", true, "Type Name", "Item Name" ],
-	},
-	"solution": {
-		[ "Type Name", "Item Name", true, "Type Name", "Item Name" ],
-	}
-}
-
+* add relational logic
+	older, younger
+	before, after 
+	to the left, to the right, beside
+	
+* add multiple assignments to a category
+	exactly x
+	atMost x
+	atLeast x
+	e.g. class has at most 20 students
+	
+	
+	
+	
+	

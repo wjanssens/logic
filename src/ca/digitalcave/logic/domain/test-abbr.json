@@ -10,9 +10,9 @@
 			"Headway", "The Petals"
 		]
 	},
-	"clauses": [
-		{ "pair": [ "Jamie", "Headway" ], "true": true },
-		{ "pair": [ "Harry", "Our World" ], "true": true }
+	"cnf": [
+		[ {"Jamie":"Headway"} ],
+		[ {"Harry":"Our World"} ]
 	]
 }
 

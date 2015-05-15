@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
@@ -25,7 +24,7 @@ public class Puzzle {
 	}
 	
 	private final HashMap<String, List<String>> terms = new HashMap<String, List<String>>();
-	private final LinkedList<Clause> clauses = new LinkedList<Clause>();
+	private final LinkedList<CnfClause> clauses = new LinkedList<CnfClause>();
 	private final ArrayList<Pair> pairs = new ArrayList<Pair>();
 
 	public Puzzle(JsonParser p) throws IOException {
@@ -42,26 +41,9 @@ public class Puzzle {
 					}
 				}
 			}
-			else if ("clauses".equals(p.getCurrentName())) {
-				boolean truth = false;
-				final Stack<String> stack = new Stack<String>();
+			else if ("cnf".equals(p.getCurrentName())) {
 				while (p.nextToken() != JsonToken.END_ARRAY) {
-					if ("pair".equals(p.getCurrentName())) {
-						while (p.nextToken() != JsonToken.END_ARRAY) {
-							if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
-								stack.push(p.getText());
-							} 
-						}
-					}
-					else if (p.getCurrentToken() == JsonToken.VALUE_TRUE) {
-						truth = true;
-					}
-					else if (p.getCurrentToken() == JsonToken.VALUE_FALSE) {
-						truth = false;
-					}
-					else if (p.getCurrentToken() == JsonToken.END_OBJECT) {
-						clauses.push(new Clause(new Pair(stack.pop(), stack.pop()), truth));
-					}
+					clauses.add(new CnfClause(p));
 				}
 			}
 		}
@@ -123,12 +105,12 @@ public class Puzzle {
 		}
 		
 		// the clauses from the problem
-		for (Clause clause : clauses) {
-			solver.addClause(new VecInt(new int[] { clause.getFactor() * (1+pairs.indexOf(clause.getPair())) }));
-			System.out.println(clause);
+		for (CnfClause clause : clauses) {
+			solver.addClause(clause.toVecInt(pairs));
+//			System.out.println(clause);
 		}
 
-		System.out.println("----");
+//		System.out.println("----");
 		
 		final IProblem problem = solver;
 		if (problem.isSatisfiable()) {
@@ -147,7 +129,7 @@ public class Puzzle {
 	}
 	
 	private VecInt toVecInt(List<Pair> l) {
-		System.out.println(l);
+//		System.out.println(l);
 		final int[] result = new int[l.size()];
 		for (int i = 0; i < result.length; i++) {
 			result[i] = 1+pairs.indexOf(l.get(i));

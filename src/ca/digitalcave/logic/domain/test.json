@@ -13,17 +13,17 @@
 			"Bill", "Colin", "Ross", "Sean"
 		]
 	},
-	"clauses": [
-		{ "pair": [ "Camilla", "Yellow" ], "true": true },
-		{ "pair": [ "Camilla", "Gladioli" ], "true": true },
-		{ "pair": [ "Gladioli", "Yellow" ], "true": true },
-		{ "pair": [ "Colin", "Red" ], "true": true },
-		{ "pair": [ "Colin", "Roses" ], "true": true },
-		{ "pair": [ "Roses", "Red" ], "true": true },
-		{ "pair": [ "Colin", "Cynthia" ], "true": false },
-		{ "pair": [ "Ross", "Chrysanths" ], "true": false },
-		{ "pair": [ "Chrysanths", "Pink" ], "true": false },
-		{ "pair": [ "Corinne", "Bill" ], "true": true }
+	"cnf": [
+		[ {"Camilla":"Yellow"} ],
+		[ {"Camilla":"Gladioli"} ],
+		[ {"Gladioli":"Yellow" } ],
+		[ {"Colin":"Red"} ],
+		[ {"Colin":"Roses"} ],
+		[ {"Roses":"Red"} ],
+		[ {"not":true, "Colin":"Cynthia"} ],
+		[ {"not":true, "Ross":"Chrysanths"} ],
+		[ {"not":true,"Chrysanths":"Pink"} ],
+		[ {"Corinne":"Bill"} ]
 	]
 }
 

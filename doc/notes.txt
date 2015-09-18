@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
 	"problem": {
 		"Friend": [
@@ -25,3 +26,20 @@
 	]
 }
 
+=======
+* add relational logic
+	older, younger
+	before, after 
+	to the left, to the right, beside
+	
+* add multiple assignments to a category
+	exactly x
+	atMost x
+	atLeast x
+	e.g. class has at most 20 students
+	
+	
+	
+	
+	
+>>>>>>> 3ee17826dd0a62c2ea92aba380a6956bc3db1eb0

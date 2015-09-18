@@ -9,36 +9,54 @@
 		<script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js" data-dojo-config="async:1"></script>
 		<script>
 require([
+	"dojo/store/Memory", "dijit/tree/ObjectStoreModel", "dijit/Tree",
 	"dijit/layout/BorderContainer", 
 	"dijit/layout/ContentPane", 
-	"dijit/Menu",
-	"dijit/MenuItem",
-	"dijit/MenuBar",
-	"dijit/MenuBarItem",
-	"dijit/PopupMenuBarItem",
 	"dojo/domReady!"
-], function(BorderContainer, ContentPane, Menu, MenuItem, MenuBar, MenuBarItem, PopupMenuBarItem) {
+], function(MemoryStore, ObjectStoreModel, Tree, BorderContainer, ContentPane) {
+	var store = new MemoryStore({
+		data: [
+			{ id: '::', name: 'Domain' },
+			{ id: 'Buyer::', name: 'Buyer', parent: '::' },
+			{ id: 'CD::', name: 'CD', parent: '::' },
+			{ id: 'Band::', name: 'Band', parent: '::'},
+			{ id: 'Buyer::Glyn', name: 'Glyn', parent: 'Buyer::', leaf: true },
+			{ id: 'Buyer::Harry', name: 'Harry', parent: 'Buyer::', leaf: true },
+			{ id: 'Buyer::Ian', name: 'Ian', parent: 'Buyer::', leaf: true },
+			{ id: 'Buyer::Jamie', name: 'Jamie', parent: 'Buyer::', leaf: true },
+			{ id: 'Buyer::Kevin', name: 'Kevin', parent: 'Buyer::', leaf: true }
+		],
+		getChildren: function(object) {
+			return this.query({parent: object.id});
+		}
+	});
+	
+	var model = new ObjectStoreModel({
+		store: store,
+		query: {id: '::'},
+		mayHaveChildren: function(object) {
+			return !object.leaf;
+		}
+	});
+	
+	var tree = new Tree({ 
+		model: model, region: 'left', splitter: true, showRoot: false, 
+		style: 'width:256px',
+		getIconClass: function(object, open) {
+			console.log(object);
+			return object.leaf ? "dijitLeaf" : open ? "dijitFolderOpened" : "dijitFolderClosed";
+		}
+	});
+	
 	var appLayout = new BorderContainer({
 		design: "headline"
 	}, 'appLayout');
 	
-	var menubar = new MenuBar({
-		region: "top"
-	});
-	appLayout.addChild(menubar);
-	menubar.addChild(new MenuBarItem({
-		label: "Test"
-	}))
 	appLayout.addChild(new ContentPane({
 		region: "center",
 		content: "Header content (top)"
 	}));
-	appLayout.addChild(new ContentPane({
-		region: "left",
-		style: "256px",
-		content: "Sidebar content (left)",
-		splitter: true
-	}));
+	appLayout.addChild(tree);
 	appLayout.startup();
 });
 		</script>

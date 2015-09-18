@@ -13,17 +13,17 @@
 			"Green", "Orange", "Pink", "Red"
 		]
 	},
-	"clauses": [
-		{ "pair": [ "Vase", "Yellow" ], "true": true },
-		{ "pair": [ "Vase", "Judy" ], "true": false },
-		{ "pair": [ "Judy", "Orange" ], "true": true },
-		{ "pair": [ "Judy", "Yellow" ], "true": false },
-		{ "pair": [ "Orange", "Yellow" ], "true": false },
-		{ "pair": [ "Shiny", "Michael" ], "true": true },
-		{ "pair": [ "Michael", "Book" ], "true": false },
-		{ "pair": [ "Painting", "Norma" ], "true": true },
-		{ "pair": [ "White", "Red" ], "true": true },
-		{ "pair": [ "Robin", "Pink" ], "true": false }
+	"cnf": [
+		[ {"Vase":"Yellow"} ],
+		[ {"not":true, "Vase":"Judy"} ],
+		[ {"Judy":"Orange"} ],
+		[ {"not":true, "Judy":"Yellow"} ],
+		[ {"not":true, "Orange", "Yellow"} ],
+		[ {"Shiny":"Michael"} ],
+		[ {"not":true, "Michael":"Book"} ],
+		[ {"Painting":"Norma"} ],
+		[ {"White":"Red"} ],
+		[ {"not":true, {"Robin":"Pink"} ]
 	]
 }
 

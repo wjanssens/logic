@@ -1,0 +1,18 @@
+{
+	"problem": {
+		"Buyer": [
+			"Harry", "Jamie"
+		],
+		"CD": [
+			"Friends", "Our World"
+		],
+		"Band": [
+			"Headway", "The Petals"
+		]
+	},
+	"cnf": [
+		[ {"Jamie":"Headway"} ],
+		[ {"Harry":"Our World"} ]
+	]
+}
+

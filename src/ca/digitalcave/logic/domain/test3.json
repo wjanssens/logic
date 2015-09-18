@@ -1,0 +1,24 @@
+{
+	"problem": {
+		"Buyer": [
+			"Glyn", "Harry", "Ian", "Jamie", "Kevin"
+		],
+		"CD": [
+			"Caught Out", "Friends", "Our World", "Wild Looks", "Yellow Moon"
+		],
+		"Band": [
+			"Girl Rock", "The Goods", "Headway", "Hi Pitch", "The Petals"
+		]
+	},
+	"cnf": [
+		[ {"Jamie":"Headway"} ],
+		[ {"Harry":"Our World"} ],
+		[ {"Caught Out":"Hi Pitch"} ],
+		[ {"not":true, "Caught Out":"Glyn"} ],
+		[ {"not":true, "Hi Pitch":"Glyn"} ],
+		[ {"Ian":"Wld Looks"} ],
+		[ {"not":true, "Ian":"The Petals"} ],
+		[ {"Girl Rock":"Yellow Moon"} ]
+	]
+}
+

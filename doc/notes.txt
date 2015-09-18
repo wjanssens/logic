@@ -1,21 +1,27 @@
 {
 	"problem": {
-		"types": {
-			"Type Name": [
-				"Item Name",
-				"Item Name"
-			],
-			"Type Name": [
-				"Item Name",
-				"Item Name"
-			]
-		}
+		"Friend": [
+			"Judy", "Michael", "Norma", "Robin"
+		],
+		"Gift": [
+			"Book", "Chocolates", "Painting", "Vase"
+		],
+		"Paper": [
+			"Blue", "Shiny", "White", "Yellow"
+		],
+		"Bow": [
+			"Green", "Orange", "Pink", "Red"
+		]
 	},
-	"clauses": {
-		[ "Type Name", "Item Name", true, "Type Name", "Item Name" ],
-	},
-	"solution": {
-		[ "Type Name", "Item Name", true, "Type Name", "Item Name" ],
-	}
+	"clauses": [
+		[ "Vase", true, "Yellow" ],
+		[ "Vase", false, "Judy"],
+		[ "Judy", true, "Orange" ],
+		[ "Shiny", true, "Michael" ],
+		[ "Michael", false, "Book" ],
+		[ "Painting", true, "Norma" ],
+		[ "White", true, "Red" ],
+		[ "Robin", false, "Pink" ]
+	]
 }
 

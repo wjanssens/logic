@@ -12,12 +12,53 @@ Model.prototype.removeClause = function(a, b) {
 		}
 	});
 };
-Model.prototype.renameGroup(oldValue, newValue) {
-	
+Model.prototype.encodeIcon = function(arr) {
+	var str = String.fromCharCode.apply(null,a);
+	return btoa(str);
 };
-Model.prototype.updateGroup(groupName, members) {
+Model.prototype.decodeIcon = function(str) {
+	var result = [];
+	var tmp = atob(str);
+	for (var i = 0; i < tmp.length; i++) {
+		result.push(tmp.charCodeAt(i));
+	}
+	return result;
+}
+
+Model.prototype.drawIcon = function(ctx, x, y, width, height, rgba, encoded) {
+	var a = this.decodeIcon(encoded);
+	var data = ctx.getImageData(x, y, width, height);
+
+	//We need to figure out which bit the beginning of the character is, and how
+	// many bytes are used for a glyph.
+	var byteCount = ((width * height) >> 3); //(w*h)/8, int math
+	var bitCount = (width * height) & 0x7; //(w*h)%8
 	
+	var bitCounter = 7;
+	var byteCounter = 0;
+
+	// account for padding, if any
+	if (bitCount != 0) {
+		byteCount++;
+		bitCounter = bitCount - 1; // the padding is at the front of the first byte, so don't start at bit 0
+	}
+	var length = width * height * 4;
+	for (var i = 0; i < length; i = i + 4) {
+		if (a[byteCounter] & (1 << bitCounter)) {
+			data[i+0] = rgba[0];
+			data[i+1] = rgba[1];
+			data[i+2] = rgba[2];
+			data[i+3] = rgba[3];
+		}
+		if (bitCounter == 0){
+			byteCounter++;
+			bitCounter = 8;
+		}
+		bitCounter--;
+	}
+	ctx.putImageData(data,x,y);
 };
+
 Model.prototype.draw = function(id) {
 	var canvas = document.getElementById(id);
 	var ctx = canvas.getContext('2d');
@@ -57,6 +98,8 @@ Model.prototype.draw = function(id) {
 	canvas.width = width+1;
 	canvas.height = height+1;
 	
+	this.drawIcon(ctx, 5,5,12,12,[0,0,255,255],"BgBgBgBgBg////BgBgBgBgBg");
+
 	// corner
 	ctx.beginPath();
 	ctx.moveTo(100,0);

@@ -76,8 +76,8 @@ Model.prototype.draw = function(id) {
 	var height = 100;
 	var gy = 0;
 	while (true) {
-		var groupName = groupNames[gy];
-		var group = problem[groupName];
+		var ygroupName = groupNames[gy];
+		var group = problem[ygroupName];
 		var sz = group.length * 20;
 		height += sz;
 		
@@ -150,13 +150,13 @@ Model.prototype.draw = function(id) {
 	var x = 100;
 	// top: 1, 2 ... n
 	for (var gx = 1; gx < groupNames.length; gx++) {
-		var groupName = groupNames[gx];
-		var group = problem[groupName];
+		var xgroupName = groupNames[gx];
+		var group = problem[xgroupName];
 		var sz = group.length * 20;
 
 		// top group name
 		ctx.textAlign = 'center';
-		ctx.fillText(groupName, x + sz/2, 8, sz);
+		ctx.fillText(xgroupName, x + sz/2, 8, sz);
 		
 		// top group name line
 		ctx.beginPath();
@@ -184,14 +184,14 @@ Model.prototype.draw = function(id) {
 	var gy = 0;
 	while (true) {
 		var ygroupName = groupNames[gy];
-		var ygroup = problem[groupName];
+		var ygroup = problem[ygroupName];
 		var ysz = group.length * 20;
 		
 		var x = 100;
 		// top: 1, 2 ... n
 		for (var gx = 1; gx < groupNames.length; gx++) {
 			var xgroupName = groupNames[gx];
-			var xgroup = problem[groupName];
+			var xgroup = problem[xgroupName];
 			var xsz = group.length * 20;
 
 			if (gy > 0 && gx > 1 && gx >= gy) continue;
@@ -232,13 +232,34 @@ Model.prototype.draw = function(id) {
 			ctx.stroke();
 			ctx.closePath();
 			
+			var dx = x;
+			var clauses = this.value.clauses;
 			for (var i in xgroup) {
+				var dy = y;
 				for (var j in ygroup) {
-					var xitem = xgroup[i];
-					var yitem = ygroup[i];
-
-					// TODO
+					var xitem = xgroupName + "::" + xgroup[i];
+					var yitem = ygroupName + "::" + ygroup[j];
+					
+					var c0 = xitem + "||" + yitem;
+					var c1 = yitem + "||" + xitem;
+					console.log(c0);
+					if (clauses[c0] == true || clauses[c1] == true) {
+						ctx.beginPath();
+						ctx.arc(dx+10, dy+10, 8, 0, 2 * Math.PI, false);
+						ctx.stroke();
+						ctx.closePath();
+					} else if (clauses[c0] == false || clauses[c1] == false) {
+						ctx.beginPath();
+						ctx.moveTo(dx+2, dy+2);
+						ctx.lineTo(dx+18, dy+18);
+						ctx.moveTo(dx+2, dy+18);
+						ctx.lineTo(dx+18, dy+2);
+						ctx.stroke();
+						ctx.closePath();
+					}
+					dy += 20;
 				}
+				dx += 20;
 			}
 			
 			x += xsz;

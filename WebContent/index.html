@@ -3,6 +3,9 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Logic</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 		<script type="application/javascript" src="logic.js"></script>
 		<script>
 var value = {
@@ -17,16 +20,16 @@ var value = {
 			"Girl Rock", "The Goods", "Headway", "Hi Pitch", "The Petals"
 		]
 	},
-	"clauses": [
-		[ "Buyer::Jamie", "Band::Headway", true ],
-		[ "Buyer::Harry", "CD::Our World", true ],
-		[ "CD::Caught Out", "Band::Hi Pitch", true ],
-		[ "CD::Caught Out", "Buyer::Glyn", false ],
-		[ "Band::Hi Pitch", "Buyer::Glyn", false ],
-		[ "Buyer::Ian", "CD::Wild Looks", true ],
-		[ "Buyer::Ian", "Band::The Petals", false ],
-		[ "Band::Girl Rock", "CD::Yellow Moon", true ]
-	]
+	"clauses": {
+		"Buyer::Jamie||Band::Headway": true,
+		"Buyer::Harry||CD::Our World": true,
+		"CD::Caught Out||Band::Hi Pitch": true,
+		"CD::Caught Out||Buyer::Glyn": false,
+		"Band::Hi Pitch||Buyer::Glyn": false,
+		"Buyer::Ian||CD::Wild Looks": true,
+		"Buyer::Ian||Band::The Petals": false,
+		"Band::Girl Rock||CD::Yellow Moon": true
+	}
 };
 
 var model = new Model(value);
@@ -34,6 +37,42 @@ var model = new Model(value);
 		</script>
 	</head>
 	<body onload="model.draw('logic')">
+	<div id="dialog-form" title="Edit">
+		<form>
+			<fieldset>
+				<label for="group">Group</label>
+				<input type="text" name="group" id="group" value="" class="text ui-widget-content ui-corner-all"/>
+				<label for="members">Members</label>
+				<textarea name="members" id="members" class="text ui-widget-content ui-corner-all">
+	 			</textarea>
+	 			
+				<!-- Allow form submission with keyboard without duplicating the dialog button -->
+				<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+			</fieldset>
+		</form>
+	</div>
+
 		<canvas id="logic" width="400" height="400"></canvas>
+		
+		<script>
+		var dialog = $( "#dialog-form" ).dialog({
+			"autoOpen": false,
+			"height": 300,
+			"width": 350,
+			"modal": true,
+			"buttons": {
+				"OK": function() {
+					
+				},
+				"Cancel": function() {
+					dialog.dialog( "close" );
+				}
+			},
+			"close": function() {
+				form[ 0 ].reset();
+				allFields.removeClass( "ui-state-error" );
+			}
+		});
+		</script>
 	</body>
 </html>

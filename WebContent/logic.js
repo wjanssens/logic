@@ -59,8 +59,78 @@ Model.prototype.drawIcon = function(ctx, x, y, width, height, rgba, encoded) {
 	ctx.putImageData(data,x,y);
 };
 
-Model.prototype.draw = function(id) {
-	var canvas = document.getElementById(id);
+Model.prototype.onclick = function(evt) {
+	var evtx = evt.pageX - evt.target.offsetLeft;
+	var evty = evt.pageY - evt.target.offsetTop;
+	
+	var problem = evt.data.value.problem;
+	var clauses = evt.data.value.clauses;
+	
+	var groupNames = [];
+	for (var groupName in problem) groupNames.push(groupName);
+
+	// group combinations
+	var y = 100;
+	var gy = 0;
+	while (true) {
+		var ygroupName = groupNames[gy];
+		var ygroup = problem[ygroupName];
+		var ysz = ygroup.length * 20;
+		
+		var x = 100;
+		// top: 1, 2 ... n
+		for (var gx = 1; gx < groupNames.length; gx++) {
+			var xgroupName = groupNames[gx];
+			var xgroup = problem[xgroupName];
+			var xsz = xgroup.length * 20;
+
+			if (gy > 0 && gx > 1 && gx >= gy) continue;
+			
+			var dx = x;
+			for (var i in xgroup) {
+				var dy = y;
+				for (var j in ygroup) {
+					if (evtx >= dx && evtx < dx + 20 && evty >= dy && evty < dy + 20) {
+						var xitem = xgroupName + "::" + xgroup[i];
+						var yitem = ygroupName + "::" + ygroup[j];
+						
+						var c0 = xitem + "||" + yitem;
+						var c1 = yitem + "||" + xitem;
+						
+						if (clauses[c0] == true) {
+							clauses[c0] = false;
+						} else if (clauses[c1] == true) {
+							clauses[c1] == false;
+						} else if (clauses[c0] == false) {
+							delete clauses[c0];
+						} else if (clauses[c1] == false) {
+							delete clauses[c1];
+						} else {
+							clauses[c0] = true;
+						}
+						
+						model.draw(this);
+						return;
+					}
+					dy += 20;
+				}
+				dx += 20;
+			}
+			
+			x += xsz;
+		}
+		
+		y += ysz;
+		
+		// side: 0, n ... 3, 2
+		if (gy == 2) break;
+		else if (gy == 0) gy = groupNames.length - 1;
+		else gy--;
+	}
+}
+
+
+Model.prototype.draw = function(canvas) {
 	var ctx = canvas.getContext('2d');
 	ctx.textAlign = 'left';
 	
@@ -68,9 +138,7 @@ Model.prototype.draw = function(id) {
 	var clauses = this.value.clauses;
 	
 	var groupNames = [];
-
 	for (var groupName in problem) groupNames.push(groupName);
-
 	
 	// compute the total height
 	var height = 100;
@@ -151,8 +219,8 @@ Model.prototype.draw = function(id) {
 	// top: 1, 2 ... n
 	for (var gx = 1; gx < groupNames.length; gx++) {
 		var xgroupName = groupNames[gx];
-		var group = problem[xgroupName];
-		var sz = group.length * 20;
+		var xgroup = problem[xgroupName];
+		var sz = xgroup.length * 20;
 
 		// top group name
 		ctx.textAlign = 'center';
@@ -185,7 +253,7 @@ Model.prototype.draw = function(id) {
 	while (true) {
 		var ygroupName = groupNames[gy];
 		var ygroup = problem[ygroupName];
-		var ysz = group.length * 20;
+		var ysz = ygroup.length * 20;
 		
 		var x = 100;
 		// top: 1, 2 ... n
@@ -242,7 +310,6 @@ Model.prototype.draw = function(id) {
 					
 					var c0 = xitem + "||" + yitem;
 					var c1 = yitem + "||" + xitem;
-					console.log(c0);
 					if (clauses[c0] == true || clauses[c1] == true) {
 						ctx.beginPath();
 						ctx.arc(dx+10, dy+10, 8, 0, 2 * Math.PI, false);

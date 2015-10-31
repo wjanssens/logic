@@ -36,25 +36,28 @@ var model = new Model(value);
 
 		</script>
 	</head>
-	<body onload="model.draw('logic')">
-	<div id="dialog-form" title="Edit">
-		<form>
-			<fieldset>
-				<label for="group">Group</label>
-				<input type="text" name="group" id="group" value="" class="text ui-widget-content ui-corner-all"/>
-				<label for="members">Members</label>
-				<textarea name="members" id="members" class="text ui-widget-content ui-corner-all">
-	 			</textarea>
-	 			
-				<!-- Allow form submission with keyboard without duplicating the dialog button -->
-				<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-			</fieldset>
-		</form>
-	</div>
+	<body onload="model.draw(document.getElementById('logic'))">
+		<div id="dialog-form" title="Edit">
+			<form>
+				<fieldset>
+					<label for="group">Group</label>
+					<input type="text" name="group" id="group" value="" class="text ui-widget-content ui-corner-all"/>
+					<label for="members">Members</label>
+					<textarea name="members" id="members" class="text ui-widget-content ui-corner-all">
+		 			</textarea>
+		 			
+					<!-- Allow form submission with keyboard without duplicating the dialog button -->
+					<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+				</fieldset>
+			</form>
+		</div>
 
 		<canvas id="logic" width="400" height="400"></canvas>
 		
 		<script>
+		
+		$('#logic').on('click', model, model.onclick);
+		
 		var dialog = $( "#dialog-form" ).dialog({
 			"autoOpen": false,
 			"height": 300,

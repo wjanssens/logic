@@ -1,62 +1,58 @@
+angular.module('Logic', ['ngMaterial'])
+.controller('LogicCtrl', function($scope) {
+	
+	$scope.value = {
+		"problem": {
+			"Buyer": [
+				"Glyn", "Harry", "Ian", "Jamie", "Kevin"
+			],
+			"CD": [
+				"Caught Out", "Friends", "Our World", "Wild Looks", "Yellow Moon"
+			],
+			"Band": [
+				"Girl Rock", "The Goods", "Headway", "Hi Pitch", "The Petals"
+			]
+		},
+		"clauses": {
+			"Buyer::Jamie||Band::Headway": true,
+			"Buyer::Harry||CD::Our World": true,
+			"CD::Caught Out||Band::Hi Pitch": true,
+			"CD::Caught Out||Buyer::Glyn": false,
+			"Band::Hi Pitch||Buyer::Glyn": false,
+			"Buyer::Ian||CD::Wild Looks": true,
+			"Buyer::Ian||Band::The Petals": false,
+			"Band::Girl Rock||CD::Yellow Moon": true
+		}
+	};
+	
+	$scope.groups = function(groups) {
+		if (arguments.length) {
+			// setter
+			var value = $scope.value;
+			var existing = [];
+			for (var k in value.problem) existing.push(k);
+			var split = groups.split('\n');
+			var problem = {};
+			for (var i in split) {
+				var members = value.problem[existing[i]] || [];
+				problem[split[i]] = members;
+			}
+			value.problem = problem;
+		} else {
+			// getter
+			var result = '';
+			for (var k in $scope.value.problem) {
+				result += k;
+				result += '\n';
+			}
+			return result;
+		}
+	};
+});
+
+
 function Model(value) {
 	this.value = value;
-};
-Model.prototype.addClause = function(a, b, value) {
-	this.value.clauses.add([a, b, value]);
-};
-Model.prototype.removeClause = function(a, b) {
-	this.value.clauses.forEach(function(clause, index) {
-		if ((clause[0] === a && clause[1] === b) ||
-			(clause[0] === b && clause[1] === a)) {
-			this.value.clauses.splice(index, 1);
-		}
-	});
-};
-Model.prototype.encodeIcon = function(arr) {
-	var str = String.fromCharCode.apply(null,a);
-	return btoa(str);
-};
-Model.prototype.decodeIcon = function(str) {
-	var result = [];
-	var tmp = atob(str);
-	for (var i = 0; i < tmp.length; i++) {
-		result.push(tmp.charCodeAt(i));
-	}
-	return result;
-}
-
-Model.prototype.drawIcon = function(ctx, x, y, width, height, rgba, encoded) {
-	var a = this.decodeIcon(encoded);
-	var data = ctx.getImageData(x, y, width, height);
-
-	//We need to figure out which bit the beginning of the character is, and how
-	// many bytes are used for a glyph.
-	var byteCount = ((width * height) >> 3); //(w*h)/8, int math
-	var bitCount = (width * height) & 0x7; //(w*h)%8
-	
-	var bitCounter = 7;
-	var byteCounter = 0;
-
-	// account for padding, if any
-	if (bitCount != 0) {
-		byteCount++;
-		bitCounter = bitCount - 1; // the padding is at the front of the first byte, so don't start at bit 0
-	}
-	var length = width * height * 4;
-	for (var i = 0; i < length; i = i + 4) {
-		if (a[byteCounter] & (1 << bitCounter)) {
-			data[i+0] = rgba[0];
-			data[i+1] = rgba[1];
-			data[i+2] = rgba[2];
-			data[i+3] = rgba[3];
-		}
-		if (bitCounter == 0){
-			byteCounter++;
-			bitCounter = 8;
-		}
-		bitCounter--;
-	}
-	ctx.putImageData(data,x,y);
 };
 
 Model.prototype.onclick = function(evt) {

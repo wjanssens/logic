@@ -1,81 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="Logic">
 	<head>
+		<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0-rc5/angular-material.min.css"/>
 		<meta charset="utf-8" />
 		<title>Logic</title>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-		<script type="application/javascript" src="logic.js"></script>
-		<script>
-var value = {
-	"problem": {
-		"Buyer": [
-			"Glyn", "Harry", "Ian", "Jamie", "Kevin"
-		],
-		"CD": [
-			"Caught Out", "Friends", "Our World", "Wild Looks", "Yellow Moon"
-		],
-		"Band": [
-			"Girl Rock", "The Goods", "Headway", "Hi Pitch", "The Petals"
-		]
-	},
-	"clauses": {
-		"Buyer::Jamie||Band::Headway": true,
-		"Buyer::Harry||CD::Our World": true,
-		"CD::Caught Out||Band::Hi Pitch": true,
-		"CD::Caught Out||Buyer::Glyn": false,
-		"Band::Hi Pitch||Buyer::Glyn": false,
-		"Buyer::Ian||CD::Wild Looks": true,
-		"Buyer::Ian||Band::The Petals": false,
-		"Band::Girl Rock||CD::Yellow Moon": true
-	}
-};
-
-var model = new Model(value);
-
-		</script>
+		
+		<style>
+body { font-size: 62.5%; }
+label, input { display:block; }
+input.text { margin-bottom:12px; width:95%; padding: .4em; }
+fieldset { padding:0; border:0; margin-top:25px; }
+h1 { font-size: 1.2em; margin: .6em 0; }
+.ui-dialog .ui-state-error { padding: .3em; }
+.validateTips { border: 1px solid transparent; padding: 0.3em; }
+#toolbar { padding: 4px; }
+#logic { margin-top: 4px; }
+textarea { width: 99%; height: 200px; }
+		</style>
 	</head>
-	<body onload="model.draw(document.getElementById('logic'))">
-		<div id="dialog-form" title="Edit">
-			<form>
-				<fieldset>
-					<label for="group">Group</label>
-					<input type="text" name="group" id="group" value="" class="text ui-widget-content ui-corner-all"/>
-					<label for="members">Members</label>
-					<textarea name="members" id="members" class="text ui-widget-content ui-corner-all">
-		 			</textarea>
-		 			
-					<!-- Allow form submission with keyboard without duplicating the dialog button -->
-					<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-				</fieldset>
-			</form>
+	
+	
+	<body ng-cloak>
+		<div class="container" ng-controller="LogicCtrl">
+			<md-content class="md-padding">
+			
+				<md-toolbar>
+					<div class="md-toolbar-tools">
+						<md-button aria-label="Edit">Edit</md-button>
+						<md-button aria-label="Solve">Solve</md-button>
+					</div>
+				</md-toolbar>
+
+				<canvas id="logic" width="400" height="400"></canvas>
+
+				<md-tabs md-selected="selectedIndex" md-border-bottom md-autoselect>
+					<md-tab label="groups">
+						<textarea style="width: 99%; height: 100px" 
+							ng-model="groups" ng-model-options="{ getterSetter: true }"></textarea>
+					</md-tab>
+					<md-tab ng-repeat="(group,members) in value.problem" ng-disabled="tab.disabled" label="({{$index+1}}) {{group}}">
+						<textarea style="width: 99%; height: 100px"></textarea>
+					</md-tab>
+				</md-tabs>
+			</md-content>
 		</div>
 
-		<canvas id="logic" width="400" height="400"></canvas>
 		
 		<script>
-		
-		$('#logic').on('click', model, model.onclick);
-		
-		var dialog = $( "#dialog-form" ).dialog({
-			"autoOpen": false,
-			"height": 300,
-			"width": 350,
-			"modal": true,
-			"buttons": {
-				"OK": function() {
-					
-				},
-				"Cancel": function() {
-					dialog.dialog( "close" );
-				}
-			},
-			"close": function() {
-				form[ 0 ].reset();
-				allFields.removeClass( "ui-state-error" );
-			}
-		});
+//			$('#logic').on('click', model, model.onclick);
 		</script>
+		
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0-rc7/angular-material.min.js"></script>
+<script src="logic.js"></script>
 	</body>
 </html>

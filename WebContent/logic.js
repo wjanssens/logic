@@ -300,8 +300,8 @@ angular.module('Logic', ['ngMaterial'])
 	};
 	
 	$scope.click = function(evt) {
-		var evtx = evt.pageX - evt.target.offsetLeft;
-		var evty = evt.pageY - evt.target.offsetTop;
+		var evtx = evt.offsetX;
+		var evty = evt.offsetY;
 		
 		var problem = $scope.value.problem;
 		var clauses = $scope.value.clauses;

@@ -1,6 +1,10 @@
 angular.module('Logic', ['ngMaterial'])
 .controller('LogicCtrl', function($scope) {
 	
+	$scope.selectRules = function() {
+		$scope.draw(document.getElementById('logic'));
+	};
+	
 	$scope.value = {
 		"problem": {
 			"Buyer": [
@@ -49,6 +53,14 @@ angular.module('Logic', ['ngMaterial'])
 		}
 	};
 	
+	$scope.members = function(members) {
+		if (arguments.length) {
+			// setter
+		} else {
+			// getter
+			return "Test\nTest\nTest";
+		}
+	};
 	
 	$scope.draw = function(canvas) {
 		var ctx = canvas.getContext('2d');
@@ -330,6 +342,4 @@ angular.module('Logic', ['ngMaterial'])
 			else gy--;
 		}
 	};
-	
-	$scope.draw(document.getElementById('logic'));
 });

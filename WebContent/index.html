@@ -17,11 +17,11 @@
 							<form>
 								<md-input-container class="md-block">
 					 				<label>Groups</label>
-									<textarea ng-model="groups" ng-model-options="{ getterSetter: true }" columns="1" rows="5"></textarea>
+									<textarea ng-model="model.problem.groupNames" ng-model-options="{ getterSetter: true }" columns="1" rows="5"></textarea>
 								</md-input-container>
-								<md-input-container ng-repeat="(group,members) in value.problem" class="md-block">
-					 				<label>{{group}}</label>
-									<textarea ng-model="members" ng-model-options="{ getterSetter: true }" columns="1" rows="5"></textarea>
+								<md-input-container ng-repeat="group in model.problem.groups" class="md-block">
+					 				<label>{{group.name}}</label>
+									<textarea ng-model="group.memberNames" ng-model-options="{ getterSetter: true }" columns="1" rows="5"></textarea>
 								</md-input-container>
 							</form>
 						</md-content>

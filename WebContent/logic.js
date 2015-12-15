@@ -1,3 +1,56 @@
+function Group(name, members) {
+	this.name = name;
+	this.members = members;
+}
+Group.prototype.memberNames = function(members) {
+	if (arguments.length) {
+		// setter
+		this.members = members.split('\n');
+	} else {
+		// getter
+		return this.members.join('\n');
+	}
+}
+
+function Problem(problem) {
+	this.groups = [];
+	for (var k in problem) {
+		this.groups.push(new Group(k,problem[k]));
+	}
+}
+Problem.prototype.groupNames = function(groups) {
+	if (arguments.length) {
+		// setter
+		var split = groups.split('\n');
+		while (this.groups.length > split.length) this.groups.pop();
+		for (var i in split) {
+			if (this.groups.length <= i) {
+				this.groups.push(new Group(split[i], []));
+			} else {
+				this.groups[i].name = split[i];
+			}
+		}
+	} else {
+		// getter
+		var result = '';
+		for (var i in this.groups) {
+			result += this.groups[i].name;
+			result += '\n';
+		}
+		return result;
+	}
+}
+Problem.prototype.toJson = function() {
+	// TODO
+}
+
+function Model(value) {
+	this.problem = new Problem(value.problem);
+	//this.clauses = new Clauses(value.clauses);
+	//this.solution = new Clauses(value.solution);
+}
+
+
 angular.module('Logic', ['ngMaterial'])
 .controller('LogicCtrl', function($scope) {
 	
@@ -5,6 +58,7 @@ angular.module('Logic', ['ngMaterial'])
 		$scope.draw(document.getElementById('logic'));
 	};
 	
+	// TODO replace all references to this value to the new model object
 	$scope.value = {
 		"problem": {
 			"Buyer": [
@@ -28,39 +82,7 @@ angular.module('Logic', ['ngMaterial'])
 			"Band::Girl Rock||CD::Yellow Moon": true
 		}
 	};
-	
-	$scope.groups = function(groups) {
-		if (arguments.length) {
-			// setter
-			var value = $scope.value;
-			var existing = [];
-			for (var k in value.problem) existing.push(k);
-			var split = groups.split('\n');
-			var problem = {};
-			for (var i in split) {
-				var members = value.problem[existing[i]] || [];
-				problem[split[i]] = members;
-			}
-			value.problem = problem;
-		} else {
-			// getter
-			var result = '';
-			for (var k in $scope.value.problem) {
-				result += k;
-				result += '\n';
-			}
-			return result;
-		}
-	};
-	
-	$scope.members = function(members) {
-		if (arguments.length) {
-			// setter
-		} else {
-			// getter
-			return "Test\nTest\nTest";
-		}
-	};
+	$scope.model = new Model($scope.value);
 	
 	$scope.draw = function(canvas) {
 		var ctx = canvas.getContext('2d');

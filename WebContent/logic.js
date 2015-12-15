@@ -52,7 +52,11 @@ function Model(value) {
 
 
 angular.module('Logic', ['ngMaterial'])
-.controller('LogicCtrl', function($scope) {
+.config(function($mdThemingProvider) {
+  $mdThemingProvider.theme('default')
+    .primaryPalette('indigo')
+    .accentPalette('pink');
+}).controller('LogicCtrl', function($scope) {
 	
 	$scope.selectRules = function() {
 		$scope.draw(document.getElementById('logic'));

@@ -46,7 +46,7 @@ Problem.prototype.toJson = function() {
 
 function Model(value) {
 	this.problem = new Problem(value.problem);
-	//this.clauses = new Clauses(value.clauses);
+	this.clauses = value.clauses;
 	//this.solution = new Clauses(value.solution);
 }
 
@@ -92,32 +92,29 @@ angular.module('Logic', ['ngMaterial'])
 		var ctx = canvas.getContext('2d');
 		ctx.textAlign = 'left';
 		
-		var problem = $scope.value.problem;
-		var clauses = $scope.value.clauses;
-		
-		var groupNames = [];
-		for (var groupName in problem) groupNames.push(groupName);
+		var problem = $scope.model.problem;
+		var clauses = $scope.model.clauses;
+		var groups = problem.groups;
 		
 		// compute the total height
 		var height = 100;
 		var gy = 0;
 		while (true) {
-			var ygroupName = groupNames[gy];
-			var group = problem[ygroupName];
-			var sz = group.length * 20;
-			height += sz;
+			var ygroup = groups[gy];
+			var ymembers = ygroup.members;
+			var ysz = ymembers.length * 20;
+			height += ysz;
 			
 			if (gy == 2) break;
-			else if (gy == 0) gy = groupNames.length - 1;
+			else if (gy == 0) gy = groups.length - 1;
 			else gy--;
 		}
 		
 		// compute the total width
 		var width = 100;
-		for (var gx = 1; gx < groupNames.length; gx++) {
-			var groupName = groupNames[gx];
-			var group = problem[groupName];
-			var sz = group.length * 20;
+		for (var gx = 1; gx < groups.length; gx++) {
+			var xgroup = groups[gx];
+			var sz = xgroup.members.length * 20;
 			width += sz;
 		}
 		
@@ -138,68 +135,66 @@ angular.module('Logic', ['ngMaterial'])
 		var y = 100;
 		var gy = 0;
 		while (true) {
-			var groupName = groupNames[gy];
-			var group = problem[groupName];
-			var sz = group.length * 20;
+			var ygroup = groups[gy];
+			var ymembers = ygroup.members;
+			var ysz = ymembers.length * 20;
 			
 			// side group name
 			ctx.save();
-			ctx.translate(8, y + sz/2);
+			ctx.translate(8, y + ysz / 2);
 			ctx.rotate(-Math.PI / 2);
 			ctx.textAlign = 'center';
-			ctx.fillText(groupName, 0, 0, sz);
+			ctx.fillText(ygroup.name, 0, 0, sz);
 			ctx.restore();
 			
 			// side group name line
 			ctx.beginPath();
-			ctx.moveTo(100,y);
-			ctx.lineTo(100,y+sz);
-			ctx.lineTo(0,y+sz);
+			ctx.moveTo(100, y);
+			ctx.lineTo(100, y + ysz);
+			ctx.lineTo(0, y + ysz);
 			ctx.stroke();
 			ctx.closePath();
 
 			// side items
 			ctx.textAlign = 'right';
-			for (var i in group) {
-				var item = group[i];
-				ctx.fillText(item, 95, 15+y, 100);
+			for (var i in ymembers) {
+				ctx.fillText(ymembers[i], 95, 15 + y, 100);
 				y += 20;
 			}
 
 			// side: 0, n ... 3, 2
 			if (gy == 2) break;
-			else if (gy == 0) gy = groupNames.length - 1;
+			else if (gy == 0) gy = groups.length - 1;
 			else gy--;
 		}
 		
 		// top headers
 		var x = 100;
 		// top: 1, 2 ... n
-		for (var gx = 1; gx < groupNames.length; gx++) {
-			var xgroupName = groupNames[gx];
-			var xgroup = problem[xgroupName];
-			var sz = xgroup.length * 20;
+		for (var gx = 1; gx < groups.length; gx++) {
+			var xgroup = groups[gx];
+			var xmembers = xgroup.members;
+			var xsz = xmembers.length * 20;
 
 			// top group name
 			ctx.textAlign = 'center';
-			ctx.fillText(xgroupName, x + sz/2, 8, sz);
+			ctx.fillText(xgroup.name, x + xsz / 2, 8, xsz);
 			
 			// top group name line
 			ctx.beginPath();
-			ctx.moveTo(x+sz,0);
-			ctx.lineTo(x+sz,100);
-			ctx.lineTo(x,100);
+			ctx.moveTo(x + xsz, 0);
+			ctx.lineTo(x + xsz, 100);
+			ctx.lineTo(x, 100);
 			ctx.stroke();
 			ctx.closePath();
 
 			// top items
-			for (var i in group) {
-				var item = group[i];
+			for (var i in xmembers) {
 				ctx.save();
-				ctx.translate(15+x, 95);
+				ctx.translate(15 + x, 95);
 				ctx.rotate(-Math.PI / 2);
 				ctx.textAlign = 'left';
-				ctx.fillText(item, 0, 0, 100);
+				ctx.fillText(xmembers[i], 0, 0, 100);
 				ctx.restore();
 				x += 20;
 			}
@@ -209,16 +204,16 @@ angular.module('Logic', ['ngMaterial'])
 		var y = 100;
 		var gy = 0;
 		while (true) {
-			var ygroupName = groupNames[gy];
-			var ygroup = problem[ygroupName];
-			var ysz = ygroup.length * 20;
+			var ygroup = groups[gy];
+			var ymembers = ygroup.members;
+			var ysz = ymembers.length * 20;
 			
 			var x = 100;
 			// top: 1, 2 ... n
-			for (var gx = 1; gx < groupNames.length; gx++) {
-				var xgroupName = groupNames[gx];
-				var xgroup = problem[xgroupName];
-				var xsz = group.length * 20;
+			for (var gx = 1; gx < groups.length; gx++) {
+				var xgroup = groups[gx];
+				var xmembers = xgroup.members;
+				var xsz = xmembers.length * 20;
 
 				if (gy > 0 && gx > 1 && gx >= gy) continue;
 				
@@ -226,7 +221,7 @@ angular.module('Logic', ['ngMaterial'])
 				var dx = x;
 				var dy = y;
 				ctx.strokeStyle = '#ddd';
-				for (var i in xgroup) {
+				for (var i in xmembers) {
 					if (i == 0) continue;
 					dx += 20;
 					ctx.beginPath();
@@ -239,7 +234,7 @@ angular.module('Logic', ['ngMaterial'])
 				// horizontal lines
 				var dx = x;
 				var dy = y;
-				for (var i in ygroup) {
+				for (var i in ymembers) {
 					if (i == 0) continue;
 					dy += 20
 					ctx.beginPath();
@@ -259,12 +254,12 @@ angular.module('Logic', ['ngMaterial'])
 				ctx.closePath();
 				
 				var dx = x;
-				var clauses = this.value.clauses;
-				for (var i in xgroup) {
+				var clauses = this.value.clauses; // TODO
+				for (var i in xmembers) {
 					var dy = y;
-					for (var j in ygroup) {
-						var xitem = xgroupName + "::" + xgroup[i];
-						var yitem = ygroupName + "::" + ygroup[j];
+					for (var j in ymembers) {
+						var xitem = xgroup.name + "::" + xmembers[i];
+						var yitem = ygroup.name + "::" + ymembers[j];
 						
 						var c0 = xitem + "||" + yitem;
 						var c1 = yitem + "||" + xitem;
@@ -294,7 +289,7 @@ angular.module('Logic', ['ngMaterial'])
 			
 			// side: 0, n ... 3, 2
 			if (gy == 2) break;
-			else if (gy == 0) gy = groupNames.length - 1;
+			else if (gy == 0) gy = groups.length - 1;
 			else gy--;
 		}
 	};

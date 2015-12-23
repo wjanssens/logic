@@ -298,36 +298,34 @@ angular.module('Logic', ['ngMaterial'])
 		var evtx = evt.offsetX;
 		var evty = evt.offsetY;
 		
-		var problem = $scope.value.problem;
-		var clauses = $scope.value.clauses;
-		
-		var groupNames = [];
-		for (var groupName in problem) groupNames.push(groupName);
+		var problem = $scope.model.problem;
+		var clauses = $scope.model.clauses;
+		var groups = problem.groups;
 
 		// group combinations
 		var y = 100;
 		var gy = 0;
 		while (true) {
-			var ygroupName = groupNames[gy];
-			var ygroup = problem[ygroupName];
-			var ysz = ygroup.length * 20;
+			var ygroup = groups[gy];
+			var ymembers = ygroup.members;
+			var ysz = ymembers.length * 20;
 			
 			var x = 100;
 			// top: 1, 2 ... n
-			for (var gx = 1; gx < groupNames.length; gx++) {
-				var xgroupName = groupNames[gx];
-				var xgroup = problem[xgroupName];
-				var xsz = xgroup.length * 20;
+			for (var gx = 1; gx < groups.length; gx++) {
+				var xgroup = groups[gx];
+				var xmembers = xgroup.members;
+				var xsz = xmembers.length * 20;
 
 				if (gy > 0 && gx > 1 && gx >= gy) continue;
 				
 				var dx = x;
-				for (var i in xgroup) {
+				for (var i in xmembers) {
 					var dy = y;
-					for (var j in ygroup) {
+					for (var j in ymembers) {
 						if (evtx >= dx && evtx < dx + 20 && evty >= dy && evty < dy + 20) {
-							var xitem = xgroupName + "::" + xgroup[i];
-							var yitem = ygroupName + "::" + ygroup[j];
+							var xitem = xgroup.name + "::" + xmembers[i];
+							var yitem = ygroup.name + "::" + ymembers[j];
 							
 							var c0 = xitem + "||" + yitem;
 							var c1 = yitem + "||" + xitem;
@@ -359,7 +357,7 @@ angular.module('Logic', ['ngMaterial'])
 			
 			// side: 0, n ... 3, 2
 			if (gy == 2) break;
-			else if (gy == 0) gy = groupNames.length - 1;
+			else if (gy == 0) gy = groups.length - 1;
 			else gy--;
 		}
 	};

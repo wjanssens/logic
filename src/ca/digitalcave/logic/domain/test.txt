@@ -1,0 +1,11 @@
+Buyer: Glyn, Harry, Ian, Jamie, Kevin
+CD: Caught Out, Friends, Our World, Wild Looks, Yellow Moon
+Band: Girl Rock, The Goods, Headway, Hi Pitch, The Petals
++ Jamie & Headway
++ Harry & Our World
++ Caught Out & Hi Pitch
+- Caught Out & Glyn
+- Hi Pitch & Glyn
+- Ian & The Petals
++ Ian & Wild Looks
++ Girl Rock & Yellow Moon

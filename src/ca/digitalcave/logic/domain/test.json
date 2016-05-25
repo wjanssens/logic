@@ -11,14 +11,13 @@
 		]
 	},
 	"clauses": [
-		[ "Buyer::Jamie", "Band::Headway", true ],
-		[ "Buyer::Harry", "CD::Our World", true ],
-		[ "CD::Caught Out", "Band::Hi Pitch", true ],
-		[ "CD::Caught Out", "Buyer::Glyn", false ],
-		[ "Band::Hi Pitch", "Buyer::Glyn", false ],
-		[ "Buyer::Ian", "CD::Wild Looks", true ],
-		[ "Buyer::Ian", "Band::The Petals", false ],
-		[ "Band::Girl Rock", "CD::Yellow Moon", true ]
+		[ "Jamie", "Headway", true ],
+		[ "Harry", "Our World", true ],
+		[ "Caught Out", "Hi Pitch", true ],
+		[ "Caught Out", "Glyn", false ],
+		[ "Hi Pitch", "Glyn", false ],
+		[ "Ian", "Wild Looks", true ],
+		[ "Ian", "The Petals", false ],
+		[ "Girl Rock", "Yellow Moon", true ]
 	]
 }
-

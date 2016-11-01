@@ -31,9 +31,7 @@ public class DefaultResource extends ServerResource {
 		final LogicApplication application = (LogicApplication) getApplication();
 		final String path = new Reference(getRootRef(), getOriginalRef()).getRemainingPart(true, false);
 				
-		if (path.startsWith("WEB-INF")) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND);
-		
-		boolean transform = variant.getMediaType().equals(MediaType.TEXT_HTML) 
+		boolean transform = variant.getMediaType().equals(MediaType.TEXT_HTML)
 					|| variant.getMediaType().equals(MediaType.APPLICATION_JAVASCRIPT); 
 		
 		if (transform) {

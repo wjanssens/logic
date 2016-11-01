@@ -7,10 +7,12 @@ import java.util.Properties;
 import org.codehaus.jackson.map.MappingJsonFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.restlet.Application;
+import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Restlet;
 import org.restlet.data.Method;
+import org.restlet.data.Protocol;
 import org.restlet.routing.Redirector;
 import org.restlet.routing.Router;
 
@@ -28,6 +30,13 @@ public class LogicApplication extends Application {
 	private final MappingJsonFactory jsonFactory = new MappingJsonFactory(new ObjectMapper());
 	private final Configuration fmConfig = new Configuration(FM_VERSION);
 
+	public static void main(String[] args) throws Exception {
+		final Component component = new Component();
+		component.getServers().add(Protocol.HTTP, 8182);
+		component.getDefaultHost().attach(new LogicApplication());
+		component.start();
+	}
+
 	@Override
 	public Restlet createInboundRoot() {
 		final Router router = new Router();
@@ -42,19 +51,21 @@ public class LogicApplication extends Application {
 		final Object servletContext = getContext().getAttributes().get("org.restlet.ext.servlet.ServletContext");
 
 		jsonFactory.setCodec(new ObjectMapper());
-		
+
+		/*
 		final String resource = "war:///WEB-INF/config.properties";
-		final InputStream is = Context.getCurrent().getClientDispatcher().handle(new Request(Method.GET, resource)).getEntity().getStream();
+		final InputStream is = getClass().getResourceAsStream("config.properties");
 		properties.load(is);
-		
-		fmConfig.setServletContextForTemplateLoading(servletContext, "/");
+		*/
+
+		fmConfig.setClassForTemplateLoading(getClass(), "/");
 		fmConfig.setDefaultEncoding("UTF-8");
 		fmConfig.setLocalizedLookup(true);
 		fmConfig.setLocale(Locale.ENGLISH);
 		fmConfig.setTemplateUpdateDelay(0);
 		fmConfig.setObjectWrapper(new BeansWrapperBuilder(FM_VERSION).build());
 		fmConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-		
+
 		super.start();
 	}
 	

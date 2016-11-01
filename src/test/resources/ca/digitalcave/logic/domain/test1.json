@@ -10,6 +10,17 @@
 			"Girl Rock", "The Goods", "Headway", "Hi Pitch", "The Petals"
 		]
 	},
+	"cnf": [
+		[ {"Jamie":"Headway"} ],
+		[ {"Harry":"Our World"} ],
+		[ {"Caught Out":"Hi Pitch"} ],
+		[ {"not":true, "Caught Out":"Hi Pitch"} ],
+		[ {"not":true, "Caught Out":"Glyn"} ],
+		[ {"not":true, "Hi Pitch":"Glyn"} ],
+		[ {"Ian":"Wild Looks"} ],
+		[ {"not":true, "Ian":"The Petals"} ],
+		[ {"Girl Rock":"Yellow Moon"} ]
+	],
 	"clauses": [
 		[ "Jamie", "Headway", true ],
 		[ "Harry", "Our World", true ],

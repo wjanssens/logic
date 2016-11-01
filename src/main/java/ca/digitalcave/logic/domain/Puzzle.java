@@ -1,14 +1,5 @@
 package ca.digitalcave.logic.domain;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-
-import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
@@ -19,20 +10,19 @@ import org.sat4j.specs.IProblem;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
-public class Puzzle {
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
-	public static void main(String[] args) throws Exception {
-		final JsonFactory f = new JsonFactory();
-		final JsonParser p = f.createJsonParser(Puzzle.class.getResourceAsStream("test.json"));
-		final Puzzle puzzle = new Puzzle(p);
-		puzzle.solve();
-		puzzle.write(f.createJsonGenerator(System.out));
-	}
-	
-	private final HashMap<String, List<String>> terms = new HashMap<String, List<String>>();
-	private final LinkedList<Clause> clauses = new LinkedList<Clause>();
-	private final ArrayList<Pair> combinations = new ArrayList<Pair>();
-	private final ArrayList<Pair> solution = new ArrayList<Pair>();
+public class Puzzle {
+	private final HashMap<String, List<String>> terms = new HashMap<>();
+	private final LinkedList<Clause> clauses = new LinkedList<>();
+	private final ArrayList<Pair> combinations = new ArrayList<>();
+	private final ArrayList<Pair> solution = new ArrayList<>();
 
 	public Puzzle(JsonParser p) throws IOException {
 		final Stack<String> stack = new Stack<String>();
@@ -42,7 +32,7 @@ public class Puzzle {
 				LinkedList<String> list = new LinkedList<String>();
 				while (p.nextToken() != JsonToken.END_OBJECT) {
 					if (p.getCurrentToken() == JsonToken.FIELD_NAME) {
-						list = new LinkedList<String>();
+						list = new LinkedList<>();
 						terms.put(p.getCurrentName(), list);
 					}
 					else if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
@@ -168,5 +158,21 @@ public class Puzzle {
 			result[i] = 1+combinations.indexOf(l.get(i));
 		}
 		return new VecInt(result);
+	}
+
+	public ArrayList<Pair> getSolution() {
+		return solution;
+	}
+
+	public ArrayList<Pair> getCombinations() {
+		return combinations;
+	}
+
+	public LinkedList<Clause> getClauses() {
+		return clauses;
+	}
+
+	public HashMap<String, List<String>> getTerms() {
+		return terms;
 	}
 }

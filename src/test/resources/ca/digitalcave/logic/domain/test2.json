@@ -18,12 +18,12 @@
 		[ {"not":true, "Vase":"Judy"} ],
 		[ {"Judy":"Orange"} ],
 		[ {"not":true, "Judy":"Yellow"} ],
-		[ {"not":true, "Orange", "Yellow"} ],
+		[ {"not":true, "Orange":"Yellow"} ],
 		[ {"Shiny":"Michael"} ],
 		[ {"not":true, "Michael":"Book"} ],
 		[ {"Painting":"Norma"} ],
 		[ {"White":"Red"} ],
-		[ {"not":true, {"Robin":"Pink"} ]
+		[ {"not":true, "Robin":"Pink"} ]
 	]
 }
 

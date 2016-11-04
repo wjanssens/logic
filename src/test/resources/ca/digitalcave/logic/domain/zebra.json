@@ -1,23 +1,11 @@
 {
-	"problem": {
-		"Position": [
-			"1", "2", "3", "4", "5"
-		],
-		"Color": [
-			"Red", "Green", "Ivory", "Yellow", "Blue"
-		],
-		"Nationality": [
-			"Englishman", "Spaniard", "Ukrainian", "Norwegian", "Japanese"
-		],
-		"Drink": [
-			"Coffee", "Tea", "Milk", "Orange Juice", "Water"
-		],
-		"Smoke": [
-			"Old Gold", "Kools", "Chesterfield", "Lucky Strike", "Parliaments"
-		],
-		"Pet": [
-			"Dog", "Snails", "Fox", "Horse", "Zebra"
-		]
+	"dimensions": {
+		"Position": ["1", "2", "3", "4", "5"],
+		"Color": ["Red", "Green", "Ivory", "Yellow", "Blue"],
+		"Nationality": ["Englishman", "Spaniard", "Ukrainian", "Norwegian", "Japanese"],
+		"Drink": ["Coffee", "Tea", "Milk", "Orange Juice", "Water"],
+		"Smoke": ["Old Gold", "Kools", "Chesterfield", "Lucky Strike", "Parliaments"],
+		"Pet": ["Dog", "Snails", "Fox", "Horse", "Zebra"]
 	},
 		
 	"cnf": [
@@ -32,10 +20,10 @@
 		[ {"Lucky Strike":"Orange Juice"} ],
 		[ {"Japanese":"Parliaments"} ],
 		{ "dnf": [
-			[ {"Ivory":"1"},{"Green","2"} ],
-			[ {"Ivory":"2"},{"Green","3"} ],
-			[ {"Ivory":"3"),{"Green":"4"} ),
-			[ {"Ivory":"4"),{"Green":"5"} ]
+			[ {"Ivory":"1"},{"Green":"2"} ],
+			[ {"Ivory":"2"},{"Green":"3"} ],
+			[ {"Ivory":"3"},{"Green":"4"} ],
+			[ {"Ivory":"4"},{"Green":"5"} ]
 		] },
 		{ "dnf": [
 			[ {"Chesterfield":"1"},{"Fox":"2"} ],

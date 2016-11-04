@@ -1,5 +1,7 @@
 package ca.digitalcave.logic.domain;
 
+import java.util.Objects;
+
 public class Pair {
 	private final String a;
 	private final String b;
@@ -27,5 +29,9 @@ public class Pair {
 	public String toString() {
 		return "(" + a + "," + b + ")";
 	}
-	
+
+	@Override
+	public int hashCode() {
+		return a.compareTo(b) < 0 ? Objects.hash(a, b) : Objects.hash(b, a);
+	}
 }

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -24,11 +25,9 @@ public class TestPuzzle {
     @Parameterized.Parameters
     public static Collection<Object[]> getParams() {
         return Arrays.asList(new Object[][] {
-            { "test1.json" },
-            { "test2.json" },
-            { "test3.json" },
-            { "small.json" },
-            //{ "zepra.json" },
+            { "cd_buys.json" },
+            { "present_time.json" }
+            //{ "zebra.json" },
         });
     }
 
@@ -39,12 +38,13 @@ public class TestPuzzle {
     @Test
     public void test() {
         try {
-            final JsonParser p = jsonFactory.createJsonParser(Puzzle.class.getResourceAsStream(name));
-            final Puzzle puzzle = new Puzzle(p);
+            final Puzzle solved = new Puzzle(jsonFactory.createJsonParser(Puzzle.class.getResourceAsStream(name)));
+            final Puzzle test = new Puzzle(jsonFactory.createJsonParser(Puzzle.class.getResourceAsStream(name)));
 
-            puzzle.solve();
+            test.solve();
             //puzzle.write(jsonFactory.createJsonGenerator(System.out));
-            assertTrue("No items in solution", puzzle.getSolution().size() > 0);
+
+            assertEquals("Incorrect solution", solved.getSolutionPairs(), test.getSolutionPairs());
         } catch (IOException e) {
             fail("Failed to parse puzzle");
         } catch (ContradictionException e) {
@@ -53,4 +53,5 @@ public class TestPuzzle {
             fail("Unexpected timeout");
         }
     }
+
 }

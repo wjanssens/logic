@@ -6,29 +6,28 @@ import org.codehaus.jackson.JsonToken;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
-import org.sat4j.specs.IProblem;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
+import java.util.Set;
 
 public class Puzzle {
 	private final HashMap<String, List<String>> terms = new HashMap<>();
 	private final LinkedList<Clause> clauses = new LinkedList<>();
-	private final ArrayList<Pair> combinations = new ArrayList<>();
-	private final ArrayList<Pair> solution = new ArrayList<>();
+	private final HashSet<Pair> solutionPairs = new HashSet<>();
 
 	public Puzzle(JsonParser p) throws IOException {
-		final Stack<String> stack = new Stack<String>();
+		final LinkedList<String> stack = new LinkedList<>();
 
-		while (p.nextToken() != JsonToken.END_OBJECT) {
-			if ("problem".equals(p.getCurrentName())) {
+		while (p.nextToken() != JsonToken.END_OBJECT && p.hasCurrentToken()) {
+			if ("dimensions".equals(p.getCurrentName())) {
 				LinkedList<String> list = new LinkedList<String>();
 				while (p.nextToken() != JsonToken.END_OBJECT) {
 					if (p.getCurrentToken() == JsonToken.FIELD_NAME) {
@@ -45,7 +44,7 @@ public class Puzzle {
 				while (p.nextToken() != JsonToken.END_ARRAY) {
 					while (p.nextToken() != JsonToken.END_ARRAY) {
 						if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
-							stack.push(p.getText());
+							stack.add(p.getText());
 						}
 						else if (p.getCurrentToken() == JsonToken.VALUE_TRUE) {
 							truth = true;
@@ -54,67 +53,102 @@ public class Puzzle {
 							truth = false;
 						}
 					}
-					clauses.push(new Clause(new Pair(stack.pop(), stack.pop()), truth));
+					clauses.add(new Clause(new Pair(stack.removeFirst(), stack.removeFirst()), truth, stack.isEmpty() ? null : stack.removeFirst()));
+					stack.clear();
 				}
-			}
-		}
-		
-		// create a List of all valid pairs
-		for (Map.Entry<String, List<String>> e : terms.entrySet()) {
-			for (Map.Entry<String, List<String>> f : terms.entrySet()) {
-				if (e.getKey().equals(f.getKey())) continue; // terms from the same group cannot be valid pairs
-				for (String a : e.getValue()) {
-					final String fqa = e.getKey() + "::" + a;
-					for (String b : f.getValue()) {
-						final String fqb = f.getKey() + "::" + b;
-						if (fqa.equals(fqb)) {
-							continue; // can this even happen?
+			} else if ("pairs".equals(p.getCurrentName())) {
+				while (p.nextToken() != JsonToken.END_ARRAY) {
+					while (p.nextToken() != JsonToken.END_ARRAY) {
+						if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
+							stack.add(p.getText());
 						}
-						final Pair pair = new Pair(fqa, fqb);
-						if (combinations.contains(pair)) continue; // ignore reflexive combinations
-						combinations.add(pair);
 					}
+					solutionPairs.add(new Pair(stack.removeFirst(), stack.removeFirst()));
+					stack.clear();
 				}
 			}
 		}
 	}
 	
 	public void solve() throws ContradictionException, TimeoutException {
+
+		System.out.println(terms);
+		// create a List of all valid solutionPairs
+		final ArrayList<Pair> validPairs = new ArrayList<>();
+		for (Map.Entry<String, List<String>> e : terms.entrySet()) {
+			for (Map.Entry<String, List<String>> f : terms.entrySet()) {
+				if (e.getKey().equals(f.getKey())) continue; // terms from the same group cannot be valid solutionPairs
+				for (String a : e.getValue()) {
+					for (String b : f.getValue()) {
+						if (a.equals(b)) {
+							continue; // can this even happen?
+						}
+						final Pair pair = new Pair(a, b);
+						if (validPairs.contains(pair)) continue; // ignore reflexive combinations
+						validPairs.add(pair);
+					}
+				}
+			}
+		}
+
+		solutionPairs.clear();
+
 		final ISolver solver = SolverFactory.newDefault();
-		solver.newVar(combinations.size());
+		solver.newVar(validPairs.size());
+		solver.setTimeoutMs(1000);
 //		solver.setExpectedNumberOfClauses(clauses.size());
 		
 		// the clauses from the valid pair combinations
 		for (Map.Entry<String, List<String>> e : terms.entrySet()) {
 			for (String a : e.getValue()) {
-				final String fqa = e.getKey() + "::" + a;
-				final ArrayList<Pair> d = new ArrayList<Pair>();
+				final ArrayList<Pair> d = new ArrayList<>();
 				for (Map.Entry<String, List<String>> f : terms.entrySet()) {
 				if (e.getKey().equals(f.getKey())) continue; // same category
-					final ArrayList<Pair> c = new ArrayList<Pair>();
+					final ArrayList<Pair> c = new ArrayList<>();
 					for (int i = 0; i < f.getValue().size(); i++) {
 						final String b = f.getValue().get(i);
-						final String fqb = f.getKey() + "::" + b;
-						final Pair p = new Pair(fqa,fqb);
+						final Pair p = new Pair(a,b);
 						c.add(p);
 						d.add(p);
 					}
-					solver.addExactly(toVecInt(c), 1);
+					solver.addExactly(toVecInt(c, validPairs), 1);
 				}
-				solver.addExactly(toVecInt(d), terms.size() - 1);
+				solver.addExactly(toVecInt(d, validPairs), terms.size() - 1);
 			}
 		}
-		// the clauses from the problem
-		for (Clause clause : clauses) {
-			solver.addClause(new VecInt(new int[] { clause.getFactor() * (1+combinations.indexOf(clause.getPair())) }));
+
+		// (a,b)&(a,c)=>(b,c) where a,b,c are from different term categories
+		for (Map.Entry<String, List<String>> A : terms.entrySet()) {
+			for (String a : A.getValue()) {
+				for (Map.Entry<String, List<String>> B : terms.entrySet()) {
+					if (A.getKey().equals(B.getKey())) continue; // same category
+					for (String b : B.getValue()) {
+						for (Map.Entry<String, List<String>> C : terms.entrySet()) {
+							if (A.getKey().equals(C.getKey())) continue; // same category
+							if (B.getKey().equals(C.getKey())) continue; // same category;
+							for (String c : C.getValue()) {
+								final int p = 1 + validPairs.indexOf(new Pair(a,b));
+								final int q = 1 + validPairs.indexOf(new Pair(a,c));
+								final int r = 1 + validPairs.indexOf(new Pair(b,c));
+								solver.addClause(new VecInt(new int[] { -p, -q, r }));
+							}
+						}
+					}
+
+				}
+			}
 		}
 
-		final IProblem problem = solver;
-		if (problem.isSatisfiable()) {
-			final int[] model = problem.findModel();
+		// the clauses from the problem
+		for (Clause clause : clauses) {
+			solver.addClause(new VecInt(new int[] { clause.getFactor() * (1 + validPairs.indexOf(clause.getPair())) }));
+		}
+
+		if (solver.isSatisfiable()) {
+			final int[] model = solver.findModel();
 			for (int i : model) {
 				if (i > 0) {
-					solution.add(combinations.get(i-1));
+					solutionPairs.add(validPairs.get(i - 1));
 				}
 			}
 		}
@@ -122,7 +156,7 @@ public class Puzzle {
 	
 	public void write(JsonGenerator g) throws IOException {
 		g.writeStartObject();
-		g.writeObjectFieldStart("problem");
+		g.writeObjectFieldStart("dimensions");
 		for (Map.Entry<String, List<String>> group : terms.entrySet()) {
 			g.writeArrayFieldStart(group.getKey());
 			for (String term : group.getValue()) {
@@ -140,8 +174,8 @@ public class Puzzle {
 			g.writeEndArray();
 		}
 		g.writeEndArray();
-		g.writeArrayFieldStart("solution");
-		for (Pair pair : solution) {
+		g.writeArrayFieldStart("pairs");
+		for (Pair pair : solutionPairs) {
 			g.writeStartArray();
 			g.writeString(pair.getA());
 			g.writeString(pair.getB());
@@ -152,27 +186,21 @@ public class Puzzle {
 		g.close();
 	}
 	
-	private VecInt toVecInt(List<Pair> l) {
+	private VecInt toVecInt(List<Pair> l, List<Pair> validPairs) {
 		final int[] result = new int[l.size()];
 		for (int i = 0; i < result.length; i++) {
-			result[i] = 1+combinations.indexOf(l.get(i));
+			result[i] = 1 + validPairs.indexOf(l.get(i));
 		}
 		return new VecInt(result);
 	}
 
-	public ArrayList<Pair> getSolution() {
-		return solution;
+	public Set<Pair> getSolutionPairs() {
+		return solutionPairs;
 	}
 
-	public ArrayList<Pair> getCombinations() {
-		return combinations;
-	}
-
-	public LinkedList<Clause> getClauses() {
-		return clauses;
-	}
-
-	public HashMap<String, List<String>> getTerms() {
-		return terms;
+	public List<List<String>> getTuples() {
+		final List<List<String>> result = new ArrayList<>();
+		// TODO
+		return result;
 	}
 }

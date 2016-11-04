@@ -1,0 +1,50 @@
+{
+	"name": "CD Buys",
+	"description": "Five teenage boys are all fans of different girl bands and each bought  the latest album recorded by his favorite, while on a shopping trip last Saturday.  Which di each boy purchase and who recorded it?",
+	"instructions": [
+		"Jamie is a huge fan of Headway, so was thrilled to add their latest album to his collection.",
+		"Harry bought Our World, recorded by his favorite band.",
+		"The Caught Out CD was released by Hi Pitch, but not purchased by Glyn.",
+		"Ian has added Wild Looks to his CD collection, none of which features the works of The Petals.",
+		"The latest Girl Rok album is Yellow Moon"
+	],
+	"dimensions": {
+		"Buyer": [ "Glyn", "Harry", "Ian", "Jamie", "Kevin" ],
+		"CD": [ "Caught Out", "Friends", "Our World", "Wild Looks", "Yellow Moon" ],
+		"Band": [ "Girl Rok", "The Goods", "Headway", "Hi Pitch", "The Petals" ]
+	},
+	"clauses": [
+		[ "Jamie", "Headway", true, "Jamie is a huge fan of Headway" ],
+		[ "Harry", "Our World", true, "Harry bought Our World" ],
+		[ "Caught Out", "Hi Pitch", true, "The Caught Out CD was released by Hi Pitch" ],
+		[ "Caught Out", "Glyn", false, "but not purchase by Glyn" ],
+		[ "Hi Pitch", "Glyn", false, "but not purchased by Glyn" ],
+		[ "Ian", "Wild Looks", true, "Ian has added Wild Looks to his CD collection" ],
+		[ "Ian", "The Petals", false, "none of which features the works of The Petals" ],
+		[ "Girl Rok", "Yellow Moon", true, "The latest Girl Rok album is Yellow Moon" ]
+	],
+	"pairs": [
+		[ "Glyn", "Yellow Moon" ],
+		[ "Harry", "Our World" ],
+		[ "Ian", "Wild Looks" ],
+		[ "Jamie", "Friends" ],
+		[ "Kevin", "Caught Out" ],
+		[ "Glyn", "Girl Rok" ],
+		[ "Harry", "The Petals" ],
+		[ "Ian", "The Goods" ],
+		[ "Jamie", "Headway" ],
+		[ "Kevin", "Hi Pitch" ],
+		[ "Girl Rok", "Yellow Moon" ],
+		[ "The Goods", "Wild Looks" ],
+		[ "Headway", "Friends" ],
+		[ "Hi Pitch", "Caught Out" ],
+		[ "The Petals", "Our World" ]
+	],
+	"tuples": [
+		[ "Glyn", "Yellow Moon", "Girl Rok" ],
+		[ "Harry", "Our World", "The Petals" ],
+		[ "Ian", "Wild Looks", "The Goods" ],
+		[ "Jamie", "Friends", "Headway" ],
+		[ "Kevin", "Caught Out", "Hi Pitch" ]
+	]
+}

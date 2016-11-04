@@ -1,0 +1,62 @@
+{
+	"name": "Present Time",
+	"description": "Four friends of Lucy's all called to see her on her birthday, each bearing a gift, beautifully wrapped in paper and adorned with a bow.  Can you discover the gift each presented to Lucy, together with the colour of the paper and tbow in which it was wrapped?",
+	"instructions": [
+		"The porcelain vase was wrapped in yellow paper, but wasn't given by Judy, who decorated her present with an orange bow.",
+		"The shiny green paper had been chosen by Michael, who didn't give Lucy the book.",
+		"The painting was given by Norma.",
+		"One of Lucy's birthday presents had been wrapped in white paper and adorned with a red satin bow.",
+		"Robin's present wasn't decorated with a pink bow."
+	],
+	"dimensions": {
+		"Friend": [ "Judy", "Michael", "Norma", "Robin" ],
+		"Gift": [ "Book", "Chocolates", "Painting", "Vase" ],
+		"Paper": [ "Blue", "Shiny", "White", "Yellow" ],
+		"Bow": [ "Green", "Orange", "Pink", "Red" ]
+	},
+	"clauses": [
+		[ "Vase", "Yellow", true, "The porcelain vas was wrapped in yellow paper" ],
+		[ "Vase", "Judy", false, "but wasn't give by Judy" ],
+		[ "Judy", "Orange", true, "who decorated her present with an Orange bow" ],
+		[ "Shiny", "Michael", true, "The shiny green paper had been chose by Michael" ],
+		[ "Michael", "Book", false, "who didn't give Lucy the book" ],
+		[ "Painting", "Norma", true, "The painting was given by Norma" ],
+		[ "White", "Red", true, "One of Lucy's birthday presents had been wrapped in white paper and adorned with a red satin bow" ],
+		[ "Robin", "Pink", false, "Robin's present wasn't decorated with a pink bow" ],
+		[ "Judy", "Yellow", false, "why?" ],
+		[ "Orange", "Yellow", false, "why?" ]
+	],
+	"pairs": [
+		[ "Judy", "Book" ],
+		[ "Michael", "Chocolates" ],
+		[ "Norma", "Painting" ],
+		[ "Robin", "Vase" ],
+		[ "Judy", "Blue" ],
+		[ "Michael", "Shiny" ],
+		[ "Norma", "White" ],
+		[ "Robin", "Yellow" ],
+		[ "Judy", "Orange" ],
+		[ "Michael", "Pink" ],
+		[ "Norma", "Red" ],
+		[ "Robin", "Green" ],
+		[ "Green", "Vase"],
+		[ "Orange", "Book" ],
+		[ "Pink", "Chocolates" ],
+		[ "Red", "Painting" ],
+		[ "Green", "Yellow"],
+		[ "Orange", "Blue" ],
+		[ "Pink", "Shiny" ],
+		[ "Red", "White" ],
+		[ "Blue", "Book" ],
+		[ "Shiny" , "Chocolates" ],
+		[ "White", "Painting" ],
+		[ "Yellow", "Vase" ]
+	],
+	"tuples": [
+		[ "Judy", "Book", "Blue", "Orange" ],
+		[ "Michael", "Chocolates", "Green", "Pink" ],
+		[ "Norma", "Painting", "White", "Red" ],
+		[ "Robin", "Vase", "Yellow", "Green" ]
+	]
+}
+

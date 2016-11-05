@@ -1,7 +1,7 @@
 {
 	"dimensions": {
 		"Position": ["1", "2", "3", "4", "5"],
-		"Color": ["Red", "Green", "Ivory", "Yellow", "Blue"],
+		"Colour": ["Red", "Green", "Ivory", "Yellow", "Blue"],
 		"Nationality": ["Englishman", "Spaniard", "Ukrainian", "Norwegian", "Japanese"],
 		"Drink": ["Coffee", "Tea", "Milk", "Orange Juice", "Water"],
 		"Smoke": ["Old Gold", "Kools", "Chesterfield", "Lucky Strike", "Parliaments"],
@@ -61,7 +61,8 @@
 	],
 
 	"tuples": [
-		[ "1", "Yellow", "Nowegian", "Water", "Kools", "Fox" ],
+		[ "Position", "Colour", "Nationality", "Drink", "Smoke", "Pet" ],
+		[ "1", "Yellow", "Norwegian", "Water", "Kools", "Fox" ],
 		[ "2", "Blue", "Ukrainian", "Tea", "Chesterfield", "Horse" ],
 		[ "3", "Red", "Englishman", "Milk", "Old Gold", "Snails" ],
 		[ "4", "Ivory", "Spaniard", "Orange Juice", "Lucky Strike", "Dog" ],

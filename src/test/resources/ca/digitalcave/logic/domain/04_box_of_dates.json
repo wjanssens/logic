@@ -1,0 +1,39 @@
+{
+	"name": "Box Of Dates",
+	"dimensions": {
+		"Name": [ "Jon", "Keith", "Peter", "Ronnie"],
+		"Age": [ "32", "39", "43", "46" ],
+		"Job": [ "Clerk", "Doctor", "Sailor", "Salesman" ],
+		"Pastime": [ "Climbing", "Fishing", "Gardening", "Painting" ]
+	},
+	"cnf": [
+		"Sailor==Painting",
+		[ "Sailor==32", "Sailor==39" ],
+		[ "Keith==39", "Keith==46" ],
+
+		"Ronnie!=Fishing",
+		"Ronnie!=Doctor",
+		"Fishing!=Doctor",
+		"Fishing!=46",
+		"Doctor!=32",
+		"Ronnie!=32",
+		"Ronnie!=46",
+		[ "Ronnie==39", "Ronnie==43" ],
+		[ "Ronnie!=39", "Fishing!=43" ],
+		[ "Ronnie!=43", "Doctor!=39" ],
+
+		"Jon!=Clerk",
+		"Jon!=32",
+		"Clerk!=46",
+		"Clerk==Gardening",
+		[ "Jon!=39", "Clerk!=43" ]
+	],
+	"tuples": [
+		[ "Name", "Age", "Job", "Pastime" ],
+		[ "Jon", "46", "Doctor", "Climbing" ],
+		[ "Keith", "39", "Salesman", "Fishing" ],
+		[ "Peter", "32", "Sailor", "Painting" ],
+		[ "Ronnie", "43", "Clerk", "Gardening" ]
+	]
+}
+

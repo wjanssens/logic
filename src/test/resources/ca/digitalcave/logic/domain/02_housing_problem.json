@@ -1,0 +1,35 @@
+{
+	"name": "Housing Problem",
+	"dimensions": {
+		"Number": [ "1", "2", "3", "4", "7" ],
+		"Husband": [ "Adam", "Bill", "Lenny", "Martin", "Walter" ],
+		"Wife": [ "Claire", "Debbie", "Katie", "Mary", "Sandra" ]
+	},
+	"cnf": [
+		[ "Claire==2", "Claire==4", "Claire==7" ],
+		[ "Walter==1", "Walter==3", "Walter==7" ],
+		"Walter != Claire",
+		"Walter != Mary",
+		[ "Walter==1", "Walter==3", "Walter==7" ],
+		[ "Debbie==2", "Debbie==4", "Debbie==7"],
+		"Walter != Debbie",
+		"Debbie!=7",
+		[ "Bill==1", "Bill==2", "Bill==7" ],
+		[ "Sandra==1", "Sandra==2", "Sandra==7" ],
+		"Katie!=7",
+		[ "Katie==2", "Katie==4", "Katie==7"],
+		[ "Adam==1", "Adam==3", "Adam==7" ],
+		"Katie!=Adam",
+		[ "Lenny==1", "Lenny==2", "Lenny==7"],
+		"Martin!=7"
+	],
+	"tuples": [
+		[ "Number", "Husband", "Wife" ],
+		[ "1", "Walter", "Sandra" ],
+		[ "2", "Lenny", "Debbie" ],
+		[ "3", "Adam", "Mary" ],
+		[ "4", "Martin", "Katie" ],
+		[ "7", "Bill", "Claire" ]
+	]
+}
+

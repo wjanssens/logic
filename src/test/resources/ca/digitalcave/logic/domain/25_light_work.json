@@ -17,25 +17,21 @@
 		"Monday != Ruby",
 		"Monday != A",
 		"Ruby != D",
-
 		[ "Ruby != C", "Monday != D" ],
 
 		"Lemon != Ruby",
 		"Lemon != Thursday",
 		"Ruby != Monday",
-
 		[ "Lemon != Wednesday", "Ruby != Tuesday" ],
 
 		"Lemon != A",
 		"Lemon != Monday",
 		"A != Thursday",
-
 		[ "A != Wednesday", "Lemon != Tuesday" ],
 
 		"A != Lime",
 
 		"Jodie != Beige",
-
 		[ "Beige != A", "Jodie != C"],
 		[ "Beige != A", "Jodie != D"],
 		[ "Beige != B", "Jodie != D"],
@@ -46,39 +42,12 @@
 		"Margaret != Blue",
 		"Blue != A",
 		"Margaret != D",
-
 		[ "Margaret != C", "Beige != B" ],
 
 		"Penny != Blue",
-
 		[ "Margaret != C", "Penny != B" ]
 	],
-	"pairs": [
-		[ "A", "Margaret" ],
-		[ "B", "Jodie" ],
-		[ "C", "Ruby" ],
-		[ "D", "Penny" ],
-		[ "A", "Beige" ],
-		[ "B", "Lemon" ],
-		[ "C", "Blue" ],
-		[ "D", "Lime" ],
-		[ "A", "Tuesday" ],
-		[ "B", "Wednesday" ],
-		[ "C", "Thursday" ],
-		[ "D", "Monday" ],
-		[ "Margaret", "Beige" ],
-		[ "Jodie", "Lemon" ],
-		[ "Ruby", "Blue" ],
-		[ "Penny", "Lime" ],
-		[ "Margaret", "Tuesday" ],
-		[ "Jodie", "Wednesday" ],
-		[ "Ruby", "Thursday" ],
-		[ "Penny", "Monday" ],
-		[ "Beige", "Tuesday" ],
-		[ "Lemon", "Wednesday" ],
-		[ "Blue", "Thursday" ],
-		[ "Lime", "Monday" ]
-	],
+
 	"tuples": [
 		[ "Lamp", "Maker", "Colour", "Day" ],
 		[ "A", "Margaret", "Beige", "Tuesday" ],

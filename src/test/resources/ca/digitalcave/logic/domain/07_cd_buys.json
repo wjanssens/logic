@@ -13,16 +13,6 @@
 		"CD": [ "Caught Out", "Friends", "Our World", "Wild Looks", "Yellow Moon" ],
 		"Band": [ "Girl Rok", "The Goods", "Headway", "Hi Pitch", "The Petals" ]
 	},
-	"clauses": [
-		[ "Jamie", "Headway", true, "Jamie is a huge fan of Headway" ],
-		[ "Harry", "Our World", true, "Harry bought Our World" ],
-		[ "Caught Out", "Hi Pitch", true, "The Caught Out CD was released by Hi Pitch" ],
-		[ "Caught Out", "Glyn", false, "but not purchase by Glyn" ],
-		[ "Hi Pitch", "Glyn", false, "but not purchased by Glyn" ],
-		[ "Ian", "Wild Looks", true, "Ian has added Wild Looks to his CD collection" ],
-		[ "Ian", "The Petals", false, "none of which features the works of The Petals" ],
-		[ "Girl Rok", "Yellow Moon", true, "The latest Girl Rok album is Yellow Moon" ]
-	],
 	"cnf": [
 		"Jamie == Headway",
 		"Harry == Our World",

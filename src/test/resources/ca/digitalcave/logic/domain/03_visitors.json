@@ -1,0 +1,38 @@
+{
+	"name": "Visitors",
+	"dimensions": {
+		"Name": [ "Philip", "Robert", "Stan", "Tommy", "Vince" ],
+		"Relation": [ "Brother", "Cousin", "Father", "Granddad", "Uncle" ],
+		"Distance": [ "30", "40", "50", "60", "70" ]
+	},
+	"cnf": [
+		"Tommy!=Uncle",
+		"Robert!=30",
+		"Robert!=40",
+		"Uncle!=60",
+		"Uncle!=70",
+		[ "Robert!=50", "Uncle!=40" ],
+		[ "Robert!=70", "Uncle!=40" ],
+		"Robert!=Uncle",
+		"Brother==50",
+		[ "Vince==60", "Vince==70" ],
+		"Vince!=Cousin",
+		"Stan!=30",
+		"Tommy!=70",
+		"Philip!=30",
+		"Granddad!=70",
+		[ "Philip!=40", "Granddad!=50" ],
+		[ "Philip!=40", "Granddad!=60" ],
+		[ "Philip!=50", "Granddad!=60" ],
+		"Philip!=Granddad"
+	],
+	"tuples": [
+		[ "Name", "Relation", "Distance" ],
+		[ "Philip", "Brother", "50" ],
+		[ "Robert", "Cousin", "60" ],
+		[ "Stan", "Uncle", "40" ],
+		[ "Tommy", "Granddad", "30" ],
+		[ "Vince", "Father", "70" ]
+	]
+}
+

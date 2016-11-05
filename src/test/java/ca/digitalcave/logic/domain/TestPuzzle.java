@@ -25,10 +25,13 @@ public class TestPuzzle {
     @Parameterized.Parameters
     public static Collection<Object[]> getParams() {
         return Arrays.asList(new Object[][] {
-            { "cd_buys.json" },
-            { "present_time.json" },
-            { "light_work.json" },
-            { "zebra.json" },
+                { "01_present_time.json" },
+                { "02_housing_problem.json" },
+                { "03_visitors.json" },
+                { "04_box_of_dates.json" },
+                { "07_cd_buys.json" },
+                { "25_light_work.json" },
+                { "zebra.json" },
         });
     }
 

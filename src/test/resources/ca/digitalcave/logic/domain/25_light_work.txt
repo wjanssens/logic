@@ -1,31 +1,25 @@
 Constructing complex CNF expressions:
 
 1. The lamp produced on Monday is further right than the one made by Ruby
-This rule involves the intersections Monday/A, Monday/B, Monday/C, Monday/D, Rudy/A, Ruby/B, Ruby/C, Ruby/D
-It is easily written in DNF as
-(Ruby/A & Monday/B) | (Ruby/A & Monday/C) | (Ruby/A & Monday/D) | (Ruby/B & Monday/C) | (Ruby/B & Monday/D) | (Ruby/C & Monday/D)
-or just
 (RA & MB) | (RA & MC) | (RA & MD) | (RB & MC) | (RB & MD) | (RC & MD)
-In order to convert this into CNF use the following truth table:
-(you can ignore all of the permutations that would permit items it the same category from being true at the same time)
 
 RA RB RC RD MA MB MC MD X
-T  F  F  F  T  F  F  F  F
-T  F  F  F  F  T  F  F  T
-T  F  F  F  F  F  T  F  T
-T  F  F  F  F  F  F  T  T
-F  T  F  F  T  F  F  F  F
-F  T  F  F  F  T  F  F  F
-F  T  F  F  F  F  T  F  T
-F  T  F  F  F  F  F  T  T
-F  F  T  F  T  F  F  F  F
-F  F  T  F  F  T  F  F  F
-F  F  T  F  F  F  T  F  F
-F  F  T  F  F  F  F  T  T
-F  F  F  T  T  F  F  F  F
-F  F  F  T  F  T  F  F  F
-F  F  F  T  F  F  T  F  F
-F  F  F  T  F  F  F  T  F
+T  F  F  F  T  F  F  F  F  -RM, -MA
+T  F  F  F  F  T  F  F  T  (RA & MB)
+T  F  F  F  F  F  T  F  T  (RA & MC)
+T  F  F  F  F  F  F  T  T  (RA & MD)
+F  T  F  F  T  F  F  F  F  (-RB | -MA), -MA
+F  T  F  F  F  T  F  F  F  -RM,
+F  T  F  F  F  F  T  F  T  (RB & MC)
+F  T  F  F  F  F  F  T  T  (RB & MD)
+F  F  T  F  T  F  F  F  F  (-RC | -MA), -MA
+F  F  T  F  F  T  F  F  F  (-RC | -MB)  <-
+F  F  T  F  F  F  T  F  F  -RM
+F  F  T  F  F  F  F  T  T  (RC & MD)
+F  F  F  T  T  F  F  F  F  (-RD | -MA), -MA, -RD
+F  F  F  T  F  T  F  F  F  (-RD | -MB), -RD
+F  F  F  T  F  F  T  F  F  (-RD | -MC), -RD
+F  F  F  T  F  F  F  T  F  -RM, -RD
 
 which gives you an equivalent expression for all the items that are false rather than true
 ~(RA & MA) & ~(RB & MA) & ~(RB & MB) & ~(RC & MA) & ~(RC & MC) & ~(RC & MD) & ~(RD & MA) & ~(RD & MB) & ~(RD & MC) & ~(RD & MD)
@@ -38,22 +32,22 @@ and using DeMorgan's Law can be written in CNF as
 (LM & RT) | (LM & RW) | (LM & RR) | (LT & RW) | (LT & RR) | (LW & RR)
 
 LM LT LW LR RM RT RW RR ?
-T  F  F  F  T  F  F  F  F
-T  F  F  F  F  T  F  F  T
-T  F  F  F  F  F  T  F  T
-T  F  F  F  F  F  F  T  T
-F  T  F  F  T  F  F  F  F
-F  T  F  F  F  T  F  F  F
-F  T  F  F  F  F  T  F  T
-F  T  F  F  F  F  F  T  T
-F  F  T  F  T  F  F  F  F
-F  F  T  F  F  T  F  F  F
-F  F  T  F  F  F  T  F  F
-F  F  T  F  F  F  F  T  T
-F  F  F  T  T  F  F  F  F
-F  F  F  T  F  T  F  F  F
-F  F  F  T  F  F  T  F  F
-F  F  F  T  F  F  F  T  F
+T  F  F  F  T  F  F  F  F  -RM, Lemon!=Ruby
+T  F  F  F  F  T  F  F  T  (LM & RT)
+T  F  F  F  F  F  T  F  T  (LM & RW)
+T  F  F  F  F  F  F  T  T  (LM & RR)
+F  T  F  F  T  F  F  F  F  -RM
+F  T  F  F  F  T  F  F  F  Lemon!=Ruby
+F  T  F  F  F  F  T  F  T  (LT & RW)
+F  T  F  F  F  F  F  T  T  (LT & RR)
+F  F  T  F  T  F  F  F  F  -RM
+F  F  T  F  F  T  F  F  F  (-LW | -RT)
+F  F  T  F  F  F  T  F  F  Lemon!=Ruby
+F  F  T  F  F  F  F  T  T  (LW & RR) <-- this is the right one
+F  F  F  T  T  F  F  F  F  -LR, -RM
+F  F  F  T  F  T  F  F  F  -LR
+F  F  F  T  F  F  T  F  F  -LR
+F  F  F  T  F  F  F  T  F  -LR, Lemon!=Ruby
 
 ~(RM & RM) & ~(LT & RM) & ~(LT & RT) & ~(LW & RM) & ~(LW & RT) & ~(LW & RW) & ~(LR & RM) & ~(LR & RT) & ~(LR & RW) & ~(LR & RR)
 (~RM | ~RM) & (~LT | ~RM) & (~LT | ~RT) & (~LW | ~RM) & (~LW | ~RT) & (~LW | ~RW) & (~LR | ~RM) & (~LR | ~RT) & (~LR | ~RW) & (~LR | ~RR)

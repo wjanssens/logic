@@ -39,13 +39,19 @@ public class TestPuzzle {
     @Test
     public void test() {
         try {
-            final Puzzle solved = new Puzzle(jsonFactory.createJsonParser(Puzzle.class.getResourceAsStream(name)));
-            final Puzzle test = new Puzzle(jsonFactory.createJsonParser(Puzzle.class.getResourceAsStream(name)));
+            final Puzzle puzzle = new Puzzle(jsonFactory.createJsonParser(Puzzle.class.getResourceAsStream(name)));
 
-            test.solve();
+            puzzle.solve();
+
+            System.out.println(puzzle.getSolutionTuples());
             //puzzle.write(jsonFactory.createJsonGenerator(System.out));
 
-            assertEquals("Incorrect solution", solved.getSolutionPairs(), test.getSolutionPairs());
+            if (!puzzle.getExpectedPairs().isEmpty()) {
+                assertEquals("Incorrect solution pairs", puzzle.getExpectedPairs(), puzzle.getSolutionPairs());
+            }
+            if (!puzzle.getExpectedTuples().isEmpty()) {
+                assertEquals("Incorrect solution tuples", puzzle.getExpectedTuples(), puzzle.getSolutionTuples());
+            }
         } catch (IOException e) {
             fail("Failed to parse puzzle");
         } catch (ContradictionException e) {

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,11 @@ import java.util.regex.Pattern;
 
 public class Puzzle {
 	private static final Pattern PATTERN = Pattern.compile("(.+)(==|<>|!=)(.+)");
-	private final HashMap<String, List<String>> terms = new HashMap<>();
+	private final LinkedHashMap<String, List<String>> terms = new LinkedHashMap<>();
 	private final HashSet<Pair> solutionPairs = new HashSet<>();
+	private final HashSet<Pair> expectedPairs = new HashSet<>();
+	private final List<List<String>> solutionTuples = new ArrayList<>();
+	private final List<List<String>> expectedTuples = new ArrayList<>();
 	private final ArrayList<Pair> validPairs = new ArrayList<>();
 	private final ISolver solver = SolverFactory.newDefault();
 
@@ -110,8 +114,18 @@ public class Puzzle {
 							stack.add(p.getText());
 						}
 					}
-					solutionPairs.add(new Pair(stack.removeFirst(), stack.removeFirst()));
+					expectedPairs.add(new Pair(stack.removeFirst(), stack.removeFirst()));
 					stack.clear();
+				}
+			} else if ("tuples".equals(p.getCurrentName())) {
+				while (p.nextToken() != JsonToken.END_ARRAY) {
+					final ArrayList<String> tuple = new ArrayList<>();
+					while (p.nextToken() != JsonToken.END_ARRAY) {
+						if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
+							tuple.add(p.getText());
+						}
+					}
+					expectedTuples.add(tuple);
 				}
 			}
 		}
@@ -141,6 +155,7 @@ public class Puzzle {
 		solutionPairs.clear();
 
 		// TODO try to document this a bit better
+		// This rule says that if ab and ac then bc must also be true
 		// (a,b)&(a,c)=>(b,c) where a,b,c are from different term categories
 		for (Map.Entry<String, List<String>> A : terms.entrySet()) {
 			for (String a : A.getValue()) {
@@ -165,9 +180,36 @@ public class Puzzle {
 
 		if (solver.isSatisfiable()) {
 			final int[] model = solver.findModel();
+
+			// populate solution pairs
+			solutionPairs.clear();
 			for (int i : model) {
 				if (i > 0) {
 					solutionPairs.add(validPairs.get(i - 1));
+				}
+			}
+
+			// populate solution tuples
+			solutionTuples.clear();
+
+			final Map.Entry<String, List<String>> A = terms.entrySet().iterator().next();
+			solutionTuples.add(new ArrayList(terms.keySet()));
+
+			for (String a : A.getValue()) {
+				// seed the result with a set for each value in the first category
+				final ArrayList<String> set = new ArrayList<>();
+				set.add(a);
+				solutionTuples.add(set);
+
+				for (Map.Entry<String, List<String>> B : terms.entrySet()) {
+					if (A.getKey().equals(B.getKey())) continue; // same category
+					for (String b : B.getValue()) {
+						final Pair pair = new Pair(a, b);
+
+						if (solutionPairs.contains(pair)){
+							set.add(b);
+						}
+					}
 				}
 			}
 		}
@@ -185,20 +227,15 @@ public class Puzzle {
 		return solutionPairs;
 	}
 
-	public Set<Set<String>> getTuples() {
-		// TODO
-		final Set<Set<String>> result = new HashSet<>();
+	public List<List<String>> getSolutionTuples() {
+		return solutionTuples;
+	}
 
-		for (Map.Entry<String, List<String>> A : terms.entrySet()) {
-			for (String a : A.getValue()) {
-				for (Map.Entry<String, List<String>> B : terms.entrySet()) {
-					if (A.getKey().equals(B.getKey())) continue; // same category
-					for (String b : B.getValue()) {
+	public Set<Pair> getExpectedPairs() {
+		return expectedPairs;
+	}
 
-					}
-				}
-			}
-		}
-		return result;
+	public List<List<String>> getExpectedTuples() {
+		return expectedTuples;
 	}
 }

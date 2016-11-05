@@ -51,6 +51,7 @@
 		[ "The Petals", "Our World" ]
 	],
 	"tuples": [
+		[ "Buyer", "CD", "Band" ],
 		[ "Glyn", "Yellow Moon", "Girl Rok" ],
 		[ "Harry", "Our World", "The Petals" ],
 		[ "Ian", "Wild Looks", "The Goods" ],

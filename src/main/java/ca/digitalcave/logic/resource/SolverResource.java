@@ -46,7 +46,7 @@ public class SolverResource extends ServerResource {
 				@Override
 				public void write(Writer w) throws IOException {
 					final JsonGenerator g = jsonFactory.createJsonGenerator(w);
-					puzzle.write(g);
+					//puzzle.write(g);  // TODO
 				}
 			};
 		} catch (IOException e) {

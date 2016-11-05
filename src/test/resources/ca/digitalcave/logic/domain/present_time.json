@@ -65,8 +65,9 @@
 		[ "Yellow", "Vase" ]
 	],
 	"tuples": [
+		[ "Friend", "Gift", "Paper", "Bow" ],
 		[ "Judy", "Book", "Blue", "Orange" ],
-		[ "Michael", "Chocolates", "Green", "Pink" ],
+		[ "Michael", "Chocolates", "Shiny", "Pink" ],
 		[ "Norma", "Painting", "White", "Red" ],
 		[ "Robin", "Vase", "Yellow", "Green" ]
 	]

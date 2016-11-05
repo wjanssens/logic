@@ -10,7 +10,7 @@
 	"dimensions": {
 		"Lamp": [ "A", "B", "C", "D" ],
 		"Maker": [ "Jodie", "Margaret", "Penny", "Ruby" ],
-		"Band": [ "Beige", "Blue", "Lemon", "Lime" ],
+		"Colour": [ "Beige", "Blue", "Lemon", "Lime" ],
 		"Day": [ "Monday", "Tuesday", "Wednesday", "Thursday" ]
 	},
 	"cnf": [
@@ -80,6 +80,7 @@
 		[ "Lime", "Monday" ]
 	],
 	"tuples": [
+		[ "Lamp", "Maker", "Colour", "Day" ],
 		[ "A", "Margaret", "Beige", "Tuesday" ],
 		[ "B", "Jodie", "Lemon", "Wednesday" ],
 		[ "C", "Ruby", "Blue", "Thursday" ],

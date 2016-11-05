@@ -1,0 +1,17 @@
+you can supply one CNF and one DNF
+they both take the same form
+[ term, term, ... ]
+for CNF this means term & term & term, ...
+for DNF this means term | term | term
+
+each term can be a positive assertion or a negative assertion or a list of assertions
+a positive assertion is written "x==y"
+a negative assertion is written "x<>y"
+a list of assertions is written [ assertion, assertion, ... ]
+
+for example [ "x==y", "a<>b", [ "x==a", "y<>b" ], ... ]
+for CNF this means x==y & a<>b & (x==a | y<>b), ...
+for DNF this means x==y | a<>b | (x==a & y<>b), ...
+
+DNF is automatically translated into CNF using truth tables that consider all of the available options for all items in the dimensions used by the expression
+

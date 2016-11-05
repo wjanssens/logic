@@ -23,6 +23,16 @@
 		[ "Ian", "The Petals", false, "none of which features the works of The Petals" ],
 		[ "Girl Rok", "Yellow Moon", true, "The latest Girl Rok album is Yellow Moon" ]
 	],
+	"cnf": [
+		"Jamie == Headway",
+		"Harry == Our World",
+		"Caught Out == HiPitch",
+		"Caught Out != Glyn",
+		"Hi Pitch != Glyn",
+		"Ian == Wild Looks",
+		"Ian != The Petals",
+		"Girl Rok == Yellow Moon"
+	],
 	"pairs": [
 		[ "Glyn", "Yellow Moon" ],
 		[ "Harry", "Our World" ],

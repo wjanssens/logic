@@ -1,0 +1,131 @@
+Constructing complex CNF expressions:
+
+1. The lamp produced on Monday is further right than the one made by Ruby
+This rule involves the intersections Monday/A, Monday/B, Monday/C, Monday/D, Rudy/A, Ruby/B, Ruby/C, Ruby/D
+It is easily written in DNF as
+(Ruby/A & Monday/B) | (Ruby/A & Monday/C) | (Ruby/A & Monday/D) | (Ruby/B & Monday/C) | (Ruby/B & Monday/D) | (Ruby/C & Monday/D)
+or just
+(RA & MB) | (RA & MC) | (RA & MD) | (RB & MC) | (RB & MD) | (RC & MD)
+In order to convert this into CNF use the following truth table:
+(you can ignore all of the permutations that would permit items it the same category from being true at the same time)
+
+RA RB RC RD MA MB MC MD X
+T  F  F  F  T  F  F  F  F
+T  F  F  F  F  T  F  F  T
+T  F  F  F  F  F  T  F  T
+T  F  F  F  F  F  F  T  T
+F  T  F  F  T  F  F  F  F
+F  T  F  F  F  T  F  F  F
+F  T  F  F  F  F  T  F  T
+F  T  F  F  F  F  F  T  T
+F  F  T  F  T  F  F  F  F
+F  F  T  F  F  T  F  F  F
+F  F  T  F  F  F  T  F  F
+F  F  T  F  F  F  F  T  T
+F  F  F  T  T  F  F  F  F
+F  F  F  T  F  T  F  F  F
+F  F  F  T  F  F  T  F  F
+F  F  F  T  F  F  F  T  F
+
+which gives you an equivalent expression for all the items that are false rather than true
+~(RA & MA) & ~(RB & MA) & ~(RB & MB) & ~(RC & MA) & ~(RC & MC) & ~(RC & MD) & ~(RD & MA) & ~(RD & MB) & ~(RD & MC) & ~(RD & MD)
+and using DeMorgan's Law can be written in CNF as
+(~RA | ~MA) & (~RB | ~MA) & (~RB | ~MB) & (~RC | ~MA) & (~RC | ~MC) & (~RC | ~MD) & (~RD | ~MA) & (~RD | ~MB) & (~RD | ~MC) & (~RD | ~MD)
+
+
+2a. The lemon lamp was made earlier in the week than Ruby's
+
+(LM & RT) | (LM & RW) | (LM & RR) | (LT & RW) | (LT & RR) | (LW & RR)
+
+LM LT LW LR RM RT RW RR ?
+T  F  F  F  T  F  F  F  F
+T  F  F  F  F  T  F  F  T
+T  F  F  F  F  F  T  F  T
+T  F  F  F  F  F  F  T  T
+F  T  F  F  T  F  F  F  F
+F  T  F  F  F  T  F  F  F
+F  T  F  F  F  F  T  F  T
+F  T  F  F  F  F  F  T  T
+F  F  T  F  T  F  F  F  F
+F  F  T  F  F  T  F  F  F
+F  F  T  F  F  F  T  F  F
+F  F  T  F  F  F  F  T  T
+F  F  F  T  T  F  F  F  F
+F  F  F  T  F  T  F  F  F
+F  F  F  T  F  F  T  F  F
+F  F  F  T  F  F  F  T  F
+
+~(RM & RM) & ~(LT & RM) & ~(LT & RT) & ~(LW & RM) & ~(LW & RT) & ~(LW & RW) & ~(LR & RM) & ~(LR & RT) & ~(LR & RW) & ~(LR & RR)
+(~RM | ~RM) & (~LT | ~RM) & (~LT | ~RT) & (~LW | ~RM) & (~LW | ~RT) & (~LW | ~RW) & (~LR | ~RM) & (~LR | ~RT) & (~LR | ~RW) & (~LR | ~RR)
+but four of these terms can be eliminated with the addition of the expression Lemon != Ruby
+(~LT | ~RM) & (~LW | ~RM) & (~LW | ~RT) & (~LR | ~RM) & (~LR | ~RT) & (~LR | ~RW)
+and this can be simplified even farther by observing that Lemon != Thursday and Ruby != Monday
+ (~LW | ~RT)
+
+2b. The lemon lamp was made later in the week than lamp A
+
+(AM & LT) | (AM & LW) | (AM & LR) | (AT & LW) | (AT & LR) | (AW & LR)
+AM AT AW AR LM LT LW LR
+~(AM & LM) & ~(AT & LM) & ~(AT & LT) & ~(AW & LM) & ~(AW & LT) & ~(AW & LW) & ~(AR & LM) & ~(AR & LT) & ~(AR & LW) & ~(AR & LR)
+(~AM | ~LM) & (~AT | ~LM) & (~AT | ~LT) & (~AW | ~LM) & (~AW | ~LT) & (~AW | ~LW) & (~AR | ~LM) & (~AR | ~LT) & (~AR | ~LW) & (~AR | ~LR)
+but four of these terms can be eliminated with the addition of the expression Lemon != A
+(~AT | ~LM) & (~AW | ~LM) & (~AW | ~LT) & (~AR | ~LM) & (~AR | ~LT) & (~AR | ~LW)
+and
+
+3. The beige lamp is directly next to the one made by Jody
+BA BB BC BD JA JB JC JD ?
+T  F  F  F  T  F  F  F  F
+T  F  F  F  F  T  F  F  T
+T  F  F  F  F  F  T  F  F
+T  F  F  F  F  F  F  T  F
+F  T  F  F  T  F  F  F  T
+F  T  F  F  F  T  F  F  F
+F  T  F  F  F  F  T  F  T
+F  T  F  F  F  F  F  T  F
+F  F  T  F  T  F  F  F  F
+F  F  T  F  F  T  F  F  T
+F  F  T  F  F  F  T  F  F
+F  F  T  F  F  F  F  T  T
+F  F  F  T  T  F  F  F  F
+F  F  F  T  F  T  F  F  F
+F  F  F  T  F  F  T  F  T
+F  F  F  T  F  F  F  T  F
+(BA & JB) | (BB & JC) | (BC & JD) | (JA & BB) | (JB & BC) | (JC & BD)
+~(BA & JA) & ~(BA & JC) & ~(BA & JD) & ~(BB & JB) & ~(BB & JD) & ~(BC & JA) & ~(BC & JC) & ~(BD & JA) & ~(BD & JB) & ~(BD & JD)
+(~BA | ~JA) & (~BA | ~JC) & (~BA | ~JD) & (~BB | ~JB) & (~BB | ~JD) & (~BC | ~JA) & (~BC | ~JC) & (~BD | ~JA) & (~BD | ~JB) & (~BD | ~JD)
+but four of these terms can be eliminated with the addition of the expression Beige != Jody
+(~BA | ~JC) & (~BA | ~JD) & (~BB | ~JD) & (~BC | ~JA) & (~BD | ~JA) & (~BD | ~JB)
+
+4a. Margaret's lamp is further left than the blue lamp
+Margaret != Blue
+Margaret != D
+Blue != A
+MA MB MC MD BA BB BC BD ?
+T  F  F  F  F  T  F  F  T
+T  F  F  F  F  F  T  F  T
+T  F  F  F  F  F  F  T  T
+F  T  F  F  F  F  T  F  T
+F  T  F  F  F  F  F  T  T
+F  F  T  F  F  T  F  F  F
+F  F  T  F  F  F  F  T  T
+
+~(MC & BB)
+~MC | ~BB
+
+4b. Margaret's lamp is further left than the one made by Penny
+MA MB MC MD PA PB PC PD ?
+T  F  F  F  F  T  F  F  T
+T  F  F  F  F  F  T  F  T
+T  F  F  F  F  F  F  T  T
+F  T  F  F  T  F  F  F  F
+F  T  F  F  F  F  T  F  T
+F  T  F  F  F  F  F  T  T
+F  F  T  F  T  F  F  F  F
+F  F  T  F  F  T  F  F  F
+F  F  T  F  F  F  F  T  T
+F  F  F  T  T  F  F  F  F
+F  F  F  T  F  T  F  F  F
+F  F  F  T  F  F  F  T  T
+
+~(MB & PA) & ~(MC & PA) & ~(MC & PB) & ~(MD & PA) & ~(MD & PB)
+

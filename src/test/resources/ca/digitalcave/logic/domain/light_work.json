@@ -1,0 +1,77 @@
+{
+	"name": "Light Work",
+	"description": "Four women enjoy making table lamps as a hobby.  Every woman made a lamp on a different day last week, and you can see their work on the plan below.  Who made each lamp, what colour (both base and share are the same colour) and when was it produced?",
+	"instructions": [
+		"The lamp produced on Monday is further right that the one made by Ruby",
+		"The lemon lamp was made earlier in the week than Ruby's, but later in the week than lamp A (which isn't lime green).",
+		"The beige lamp is directly next to the on made by Jodie",
+		"Margaret's lamp is further left than the blue lamp and the one made by Penny (which isn't blue).",
+	],
+	"dimensions": {
+		"Lamp": [ "A", "B", "C", "D" ],
+		"Maker": [ "Jodie", "Margaret", "Penny", "Ruby" ],
+		"Band": [ "Beige", "Blue", "Lemon", "Lime" ],
+		"Day": [ "Monday", "Tuesday", "Wednesday", "Thursday" ]
+	},
+	"cnf": [
+		"Monday != Ruby",
+		"Monday != A",
+		"Ruby != D",
+
+		[ "Ruby != C", "Monday != D" ],
+
+		"Lemon != Ruby",
+		"Lemon != Thursday",
+		"Ruby != Monday",
+
+		[ "Lemon != Wednesday", "Ruby != Tuesday" ],
+
+		"Lemon != A",
+		"Lemon != Monday",
+		"A != Thursday",
+
+		[ "A != Wednesday", "Lemon != Tuesday" ],
+
+		"A != Green",
+
+		"Jodie != Beige",
+
+		[ "Beige != A", "Jodie != C"],
+		[ "Beige != A", "Jodie != D"],
+		[ "Beige != B", "Jodie != D"],
+		[ "Beige != C", "Jodie != A"],
+		[ "Beige != D", "Jodie != A"],
+		[ "Beige != D", "Jodie != B"],
+
+		"Margaret != Blue",
+		"Blue != A",
+		"Margaret != D",
+
+		[ "Margaret != C", "Beige != B" ],
+
+		"Penny != Blue",
+
+		[ "Margaret != C", "Penny != B" ]
+	],
+	"pairs": [
+		[ "A", "Margaret" ],
+		[ "B", "Jodie" ],
+		[ "C", "Ruby" ],
+		[ "D", "Penny" ],
+		[ "A", "Beige" ],
+		[ "B", "Lemon" ],
+		[ "C", "Blue" ],
+		[ "D", "Lime" ],
+		[ "A", "Tuesday" ],
+		[ "B", "Wednesday" ],
+		[ "C", "Thursday" ],
+		[ "D", "Monday" ]
+	],
+	"tuples": [
+		[ "Glyn", "Yellow Moon", "Girl Rok" ],
+		[ "Harry", "Our World", "The Petals" ],
+		[ "Ian", "Wild Looks", "The Goods" ],
+		[ "Jamie", "Friends", "Headway" ],
+		[ "Kevin", "Caught Out", "Hi Pitch" ]
+	]
+}

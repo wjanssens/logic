@@ -17,44 +17,94 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Puzzle {
+	private static final Pattern PATTERN = Pattern.compile("(.+)(==|<>|!=)(.+)");
 	private final HashMap<String, List<String>> terms = new HashMap<>();
 	private final LinkedList<Clause> clauses = new LinkedList<>();
 	private final HashSet<Pair> solutionPairs = new HashSet<>();
+	private final ArrayList<Pair> validPairs = new ArrayList<>();
+	private final ISolver solver = SolverFactory.newDefault();
 
-	public Puzzle(JsonParser p) throws IOException {
+	public Puzzle(JsonParser p) throws IOException, ContradictionException {
+
 		final LinkedList<String> stack = new LinkedList<>();
 
 		while (p.nextToken() != JsonToken.END_OBJECT && p.hasCurrentToken()) {
 			if ("dimensions".equals(p.getCurrentName())) {
-				LinkedList<String> list = new LinkedList<String>();
+				LinkedList<String> list = new LinkedList<>();
 				while (p.nextToken() != JsonToken.END_OBJECT) {
 					if (p.getCurrentToken() == JsonToken.FIELD_NAME) {
 						list = new LinkedList<>();
 						terms.put(p.getCurrentName(), list);
-					}
-					else if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
+					} else if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
 						list.add(p.getText());
 					}
 				}
-			}
-			else if ("clauses".equals(p.getCurrentName())) {
-				boolean truth = false;
-				while (p.nextToken() != JsonToken.END_ARRAY) {
-					while (p.nextToken() != JsonToken.END_ARRAY) {
-						if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
-							stack.add(p.getText());
-						}
-						else if (p.getCurrentToken() == JsonToken.VALUE_TRUE) {
-							truth = true;
-						}
-						else if (p.getCurrentToken() == JsonToken.VALUE_FALSE) {
-							truth = false;
+
+				// now that we've seen all of the dimensions an their members
+				// create an array of all valid pair combination
+				// in this way each valid pair will have a unique index
+				for (Map.Entry<String, List<String>> e : terms.entrySet()) {
+					for (Map.Entry<String, List<String>> f : terms.entrySet()) {
+						if (e.getKey().equals(f.getKey())) continue; // terms from the same group cannot be valid solutionPairs
+						for (String a : e.getValue()) {
+							for (String b : f.getValue()) {
+								if (a.equals(b)) {
+									continue; // ignore self combinations (i.e. Monday == Monday)
+								}
+								final Pair pair = new Pair(a, b);
+								if (validPairs.contains(pair)) {
+									continue; // ignore reflexive combinations (i.e. Monday == Jodie and Jodie == Monday)
+								}
+								validPairs.add(pair);
+							}
 						}
 					}
-					clauses.add(new Clause(new Pair(stack.removeFirst(), stack.removeFirst()), truth, stack.isEmpty() ? null : stack.removeFirst()));
-					stack.clear();
+				}
+
+				solver.newVar(validPairs.size());
+				solver.setTimeoutMs(1000);
+
+				// add the the valid pair combinations to the solver
+				for (Map.Entry<String, List<String>> e : terms.entrySet()) {
+					for (String a : e.getValue()) {
+						final ArrayList<Pair> d = new ArrayList<>();
+						for (Map.Entry<String, List<String>> f : terms.entrySet()) {
+							if (e.getKey().equals(f.getKey())) continue; // same category
+							final ArrayList<Pair> c = new ArrayList<>();
+							for (int i = 0; i < f.getValue().size(); i++) {
+								final String b = f.getValue().get(i);
+								final Pair pair = new Pair(a,b);
+								c.add(pair);
+								d.add(pair);
+							}
+							solver.addExactly(toVecInt(c), 1);
+						}
+						solver.addExactly(toVecInt(d), terms.size() - 1);
+					}
+				}
+			} else if ("cnf".equals(p.getCurrentName())) {
+				final ArrayList<Integer> indices = new ArrayList<>();
+				p.nextToken();
+				while (p.nextToken() != JsonToken.END_ARRAY) {
+					switch (p.getCurrentToken()) {
+						case VALUE_STRING:
+							solver.addClause(new VecInt(new int[] { tokenize(p.getText()) }));
+							break;
+						case START_ARRAY:
+							indices.clear();
+							while (p.nextToken() != JsonToken.END_ARRAY) {
+								if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
+									indices.add(tokenize(p.getText()));
+								}
+							}
+							solver.addClause(new VecInt(indices.stream().mapToInt(i -> i).toArray()));
+							break;
+					}
 				}
 			} else if ("pairs".equals(p.getCurrentName())) {
 				while (p.nextToken() != JsonToken.END_ARRAY) {
@@ -69,54 +119,31 @@ public class Puzzle {
 			}
 		}
 	}
+
+	private int tokenize(String string) {
+		final Matcher matcher = PATTERN.matcher(string);
+		if (matcher.matches()) {
+			final String a = matcher.group(1).trim();
+			final String b = matcher.group(3).trim();
+			final String eq = matcher.group(2);
+
+			final Pair pair = new Pair(a, b);
+			final int index = validPairs.indexOf(pair) + 1;
+			final int factor = "==".equals(eq) ? 1 : -1;
+
+			if (index == 0) {
+				throw new IllegalStateException("Invalid pair " + pair);
+			}
+			return factor * index;
+		} else {
+			throw new IllegalStateException("Can't parse expression " + string);
+		}
+	}
 	
 	public void solve() throws ContradictionException, TimeoutException {
-
-		System.out.println(terms);
-		// create a List of all valid solutionPairs
-		final ArrayList<Pair> validPairs = new ArrayList<>();
-		for (Map.Entry<String, List<String>> e : terms.entrySet()) {
-			for (Map.Entry<String, List<String>> f : terms.entrySet()) {
-				if (e.getKey().equals(f.getKey())) continue; // terms from the same group cannot be valid solutionPairs
-				for (String a : e.getValue()) {
-					for (String b : f.getValue()) {
-						if (a.equals(b)) {
-							continue; // can this even happen?
-						}
-						final Pair pair = new Pair(a, b);
-						if (validPairs.contains(pair)) continue; // ignore reflexive combinations
-						validPairs.add(pair);
-					}
-				}
-			}
-		}
-
 		solutionPairs.clear();
 
-		final ISolver solver = SolverFactory.newDefault();
-		solver.newVar(validPairs.size());
-		solver.setTimeoutMs(1000);
-//		solver.setExpectedNumberOfClauses(clauses.size());
-		
-		// the clauses from the valid pair combinations
-		for (Map.Entry<String, List<String>> e : terms.entrySet()) {
-			for (String a : e.getValue()) {
-				final ArrayList<Pair> d = new ArrayList<>();
-				for (Map.Entry<String, List<String>> f : terms.entrySet()) {
-				if (e.getKey().equals(f.getKey())) continue; // same category
-					final ArrayList<Pair> c = new ArrayList<>();
-					for (int i = 0; i < f.getValue().size(); i++) {
-						final String b = f.getValue().get(i);
-						final Pair p = new Pair(a,b);
-						c.add(p);
-						d.add(p);
-					}
-					solver.addExactly(toVecInt(c, validPairs), 1);
-				}
-				solver.addExactly(toVecInt(d, validPairs), terms.size() - 1);
-			}
-		}
-
+		// TODO try to document this a bit better
 		// (a,b)&(a,c)=>(b,c) where a,b,c are from different term categories
 		for (Map.Entry<String, List<String>> A : terms.entrySet()) {
 			for (String a : A.getValue()) {
@@ -137,11 +164,6 @@ public class Puzzle {
 
 				}
 			}
-		}
-
-		// the clauses from the problem
-		for (Clause clause : clauses) {
-			solver.addClause(new VecInt(new int[] { clause.getFactor() * (1 + validPairs.indexOf(clause.getPair())) }));
 		}
 
 		if (solver.isSatisfiable()) {
@@ -186,7 +208,7 @@ public class Puzzle {
 		g.close();
 	}
 	
-	private VecInt toVecInt(List<Pair> l, List<Pair> validPairs) {
+	private VecInt toVecInt(List<Pair> l) {
 		final int[] result = new int[l.size()];
 		for (int i = 0; i < result.length; i++) {
 			result[i] = 1 + validPairs.indexOf(l.get(i));

@@ -5,7 +5,7 @@
 		"The lamp produced on Monday is further right that the one made by Ruby",
 		"The lemon lamp was made earlier in the week than Ruby's, but later in the week than lamp A (which isn't lime green).",
 		"The beige lamp is directly next to the on made by Jodie",
-		"Margaret's lamp is further left than the blue lamp and the one made by Penny (which isn't blue).",
+		"Margaret's lamp is further left than the blue lamp and the one made by Penny (which isn't blue)."
 	],
 	"dimensions": {
 		"Lamp": [ "A", "B", "C", "D" ],
@@ -32,7 +32,7 @@
 
 		[ "A != Wednesday", "Lemon != Tuesday" ],
 
-		"A != Green",
+		"A != Lime",
 
 		"Jodie != Beige",
 

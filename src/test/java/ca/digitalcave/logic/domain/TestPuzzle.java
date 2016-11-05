@@ -26,7 +26,8 @@ public class TestPuzzle {
     public static Collection<Object[]> getParams() {
         return Arrays.asList(new Object[][] {
             { "cd_buys.json" },
-            { "present_time.json" }
+            { "present_time.json" },
+            { "light_work.json" }
             //{ "zebra.json" },
         });
     }

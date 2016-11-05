@@ -26,6 +26,18 @@
 		[ "Judy", "Yellow", false, "why?" ],
 		[ "Orange", "Yellow", false, "why?" ]
 	],
+	"cnf": [
+		"Vase == Yellow",
+		"Vase != Judy",
+		"Judy == Orange",
+		"Shiny == Michael",
+		"Michael != Book",
+		"Painting == Norma",
+		"White == Red",
+		"Robin != Pink",
+		"Judy != Yellow",
+		"Orange != Yellow"
+	],
 	"pairs": [
 		[ "Judy", "Book" ],
 		[ "Michael", "Chocolates" ],

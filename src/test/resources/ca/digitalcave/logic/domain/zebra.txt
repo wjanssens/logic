@@ -1,0 +1,76 @@
+Ivory left of Green
+
+(i1 & g2) | (i2 & g3) | (i3 & g4) | (i4 & g5)
+
+-g1
+-i5
+
+i1 i2 i3 i4 i5   g1 g2 g3 g4 g5   ??
+t  f  f  f  f    t  f  f  f  f    f  (-g1) (i != g)
+t  f  f  f  f    f  t  f  f  f    t  (i1 & g2)
+t  f  f  f  f    f  f  t  f  f    f
+t  f  f  f  f    f  f  f  t  f    f
+t  f  f  f  f    f  f  f  f  t    f
+
+f  t  f  f  f    t  f  f  f  f    f  (-g1)
+f  t  f  f  f    f  t  f  f  f    f  (i != g)
+f  t  f  f  f    f  f  t  f  f    t  (i2 & g3)
+f  t  f  f  f    f  f  f  t  f    f
+f  t  f  f  f    f  f  f  f  t    f
+
+f  f  t  f  f    t  f  f  f  f    f  (-g1)
+f  f  t  f  f    f  t  f  f  f    f
+f  f  t  f  f    f  f  t  f  f    f  (i != g)
+f  f  t  f  f    f  f  f  t  f    t  (i3 & g4)
+f  f  t  f  f    f  f  f  f  t    f
+
+f  f  f  t  f    t  f  f  f  f    f  (-g1)
+f  f  f  t  f    f  t  f  f  f    f
+f  f  f  t  f    f  f  t  f  f    f
+f  f  f  t  f    f  f  f  t  f    f  (i != g)
+f  f  f  t  f    f  f  f  f  t    t  (i4 & g5)
+
+f  f  f  f  t    t  f  f  f  f    f  (-g1) (-i5)
+f  f  f  f  t    f  t  f  f  f    f  (-i5)
+f  f  f  f  t    f  f  t  f  f    f  (-i5)
+f  f  f  f  t    f  f  f  t  f    f  (-i5)
+f  f  f  f  t    f  f  f  f  t    f  (-i5) (i != g)
+
+(-i1 | -g3) & (-i1 | -g4) & (-i1 | -g5) & (-i2 | -g4) & (-i2 | -g5) & (-i3 | -g2) & (-i3 | -g5) & (-i4 | -g2) & (-i4 | -g3)
+
+Chesterfield beside Fox
+
+(c1 & f2) | (f1 & c2) | (c2 & f3) | (f2 & c3) | (c3 & f4) | (f3 & c4) | (c4 & f5) | (f4 & c5)
+
+c1 c2 c3 c4 c5   f1 f2 f3 f4 f5   ??
+t  f  f  f  f    t  f  f  f  f    f  (i != g)
+t  f  f  f  f    f  t  f  f  f    t  (c1 & f2)
+t  f  f  f  f    f  f  t  f  f    f  (-c1 | -f3)
+t  f  f  f  f    f  f  f  t  f    f  (-c1 | -f4)
+t  f  f  f  f    f  f  f  f  t    f  (-c1 | -f5)
+
+f  t  f  f  f    t  f  f  f  f    t  (f1 & c2)
+f  t  f  f  f    f  t  f  f  f    f  (i != g)
+f  t  f  f  f    f  f  t  f  f    t  (c2 & f3)
+f  t  f  f  f    f  f  f  t  f    f  (-c2 | -f4)
+f  t  f  f  f    f  f  f  f  t    f  (-c2 | -f5)
+
+f  f  t  f  f    t  f  f  f  f    f  (-c3 | -f1)
+f  f  t  f  f    f  t  f  f  f    t  (f2 & c3)
+f  f  t  f  f    f  f  t  f  f    f  (i != g)
+f  f  t  f  f    f  f  f  t  f    t  (c3 & f4)
+f  f  t  f  f    f  f  f  f  t    f  (-c3 | -f5)
+
+f  f  f  t  f    t  f  f  f  f    f  (-c4 | -f1)
+f  f  f  t  f    f  t  f  f  f    f  (-c4 | -f2)
+f  f  f  t  f    f  f  t  f  f    t  (f3 & c4)
+f  f  f  t  f    f  f  f  t  f    f  (i != g)
+f  f  f  t  f    f  f  f  f  t    t  (c4 & f5)
+
+f  f  f  f  t    t  f  f  f  f    f  (-c5 | -f1)
+f  f  f  f  t    f  t  f  f  f    f  (-c5 | -f2)
+f  f  f  f  t    f  f  t  f  f    f  (-c5 | -f3)
+f  f  f  f  t    f  f  f  t  f    t  (f4 & c5)
+f  f  f  f  t    f  f  f  f  t    f  (i != g)
+
+(-c1 | -f3) & (-c1 | -f4) & (-c1 | -f5) & (-c2 | -f4) & (-c2 | -f5) & (-c3 | -f1) & (-c3 | -f5) & (-c4 | -f1) & (-c4 | -f2) & (-c5 | -f1) & (-c5 | -f2) & (-c5 | -f3)

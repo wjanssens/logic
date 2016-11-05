@@ -65,13 +65,24 @@
 		[ "A", "Tuesday" ],
 		[ "B", "Wednesday" ],
 		[ "C", "Thursday" ],
-		[ "D", "Monday" ]
+		[ "D", "Monday" ],
+		[ "Margaret", "Beige" ],
+		[ "Jodie", "Lemon" ],
+		[ "Ruby", "Blue" ],
+		[ "Penny", "Lime" ],
+		[ "Margaret", "Tuesday" ],
+		[ "Jodie", "Wednesday" ],
+		[ "Ruby", "Thursday" ],
+		[ "Penny", "Monday" ],
+		[ "Beige", "Tuesday" ],
+		[ "Lemon", "Wednesday" ],
+		[ "Blue", "Thursday" ],
+		[ "Lime", "Monday" ]
 	],
 	"tuples": [
-		[ "Glyn", "Yellow Moon", "Girl Rok" ],
-		[ "Harry", "Our World", "The Petals" ],
-		[ "Ian", "Wild Looks", "The Goods" ],
-		[ "Jamie", "Friends", "Headway" ],
-		[ "Kevin", "Caught Out", "Hi Pitch" ]
+		[ "A", "Margaret", "Beige", "Tuesday" ],
+		[ "B", "Jodie", "Lemon", "Wednesday" ],
+		[ "C", "Ruby", "Blue", "Thursday" ],
+		[ "D", "Penny", "Lime", "Monday" ]
 	]
 }

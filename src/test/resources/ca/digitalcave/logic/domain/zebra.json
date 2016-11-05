@@ -7,45 +7,66 @@
 		"Smoke": ["Old Gold", "Kools", "Chesterfield", "Lucky Strike", "Parliaments"],
 		"Pet": ["Dog", "Snails", "Fox", "Horse", "Zebra"]
 	},
-		
+
 	"cnf": [
-		[ {"Englishman":"Red"} ],
-		[ {"Spaniard":"Dog"} ],
-		[ {"Coffee":"Green"} ],
-		[ {"Ukrainian":"Tea"} ],
-		[ {"Old Gold":"Snails"} ],
-		[ {"Kools":"Yellow"} ],
-		[ {"Milk":"3"} ],
-		[ {"Norwegian":"1"} ],
-		[ {"Lucky Strike":"Orange Juice"} ],
-		[ {"Japanese":"Parliaments"} ],
-		{ "dnf": [
-			[ {"Ivory":"1"},{"Green":"2"} ],
-			[ {"Ivory":"2"},{"Green":"3"} ],
-			[ {"Ivory":"3"},{"Green":"4"} ],
-			[ {"Ivory":"4"},{"Green":"5"} ]
-		] },
-		{ "dnf": [
-			[ {"Chesterfield":"1"},{"Fox":"2"} ],
-			[ {"Fox":"1"},{"Chesterfield":"2"} ],
-			[ {"Chesterfield":"2"},{"Fox":"3"} ],
-			[ {"Fox":"2"},{"Chesterfield":"3"} ],
-			[ {"Chesterfield":"3"},{"Fox":"4"} ],
-			[ {"Fox":"3"},{"Chesterfield":"4"} ],
-			[ {"Chesterfield":"4"},{"Fox":"5"} ],
-			[ {"Fox":"4"},{"Chesterfield":"5"} ]
-		] },
-		{ "dnf": [
-			[ {"Kools":"1"},{"Horse":"2"} ],
-			[ {"Horse":"1"},{"Kools":"2"} ],
-			[ {"Kools":"2"},{"Horse":"3"} ],
-			[ {"Horse":"2"},{"Kools":"3"} ],
-			[ {"Kools":"3"},{"Horse":"4"} ],
-			[ {"Horse":"3"},{"Kools":"4"} ],
-			[ {"Kools":"4"},{"Horse":"5"} ],
-			[ {"Horse":"4"},{"Kools":"5"} ],
-		] }
-		
+		"Englishman == Red",
+		"Spaniard == Dog",
+		"Coffee == Green",
+		"Ukrainian == Tea",
+		"Old Gold == Snails",
+		"Kools == Yellow",
+		"Milk == 3",
+		"Norwegian == 1",
+		"Lucky Strike == Orange Juice",
+		"Japanese == Parliaments",
+
+		"Ivory != 5",
+		"Green != 1",
+
+		[ "Ivory != 1", "Green != 3" ],
+		[ "Ivory != 1", "Green != 4" ],
+		[ "Ivory != 1", "Green != 5" ],
+		[ "Ivory != 2", "Green != 4" ],
+		[ "Ivory != 2", "Green != 5" ],
+		[ "Ivory != 3", "Green != 2" ],
+		[ "Ivory != 3", "Green != 5" ],
+		[ "Ivory != 4", "Green != 2" ],
+		[ "Ivory != 4", "Green != 3" ],
+
+		[ "Chesterfield != 1", "Fox != 3" ],
+		[ "Chesterfield != 1", "Fox != 4" ],
+		[ "Chesterfield != 1", "Fox != 5" ],
+		[ "Chesterfield != 2", "Fox != 4" ],
+		[ "Chesterfield != 2", "Fox != 5" ],
+		[ "Chesterfield != 3", "Fox != 1" ],
+		[ "Chesterfield != 3", "Fox != 5" ],
+		[ "Chesterfield != 4", "Fox != 1" ],
+		[ "Chesterfield != 4", "Fox != 2" ],
+		[ "Chesterfield != 5", "Fox != 1" ],
+		[ "Chesterfield != 5", "Fox != 2" ],
+		[ "Chesterfield != 5", "Fox != 3" ],
+
+		[ "Kools != 1", "Horse != 3" ],
+		[ "Kools != 1", "Horse != 4" ],
+		[ "Kools != 1", "Horse != 5" ],
+		[ "Kools != 2", "Horse != 4" ],
+		[ "Kools != 2", "Horse != 5" ],
+		[ "Kools != 3", "Horse != 1" ],
+		[ "Kools != 3", "Horse != 5" ],
+		[ "Kools != 4", "Horse != 1" ],
+		[ "Kools != 4", "Horse != 2" ],
+		[ "Kools != 5", "Horse != 1" ],
+		[ "Kools != 5", "Horse != 2" ],
+		[ "Kools != 5", "Horse != 3" ]
+	],
+
+	"tuples": [
+		[ "1", "Yellow", "Nowegian", "Water", "Kools", "Fox" ],
+		[ "2", "Blue", "Ukrainian", "Tea", "Chesterfield", "Horse" ],
+		[ "3", "Red", "Englishman", "Milk", "Old Gold", "Snails" ],
+		[ "4", "Ivory", "Spaniard", "Orange Juice", "Lucky Strike", "Dog" ],
+		[ "5", "Green", "Japanese", "Coffee", "Parliament", "Zebra" ]
 	]
+
 }
 

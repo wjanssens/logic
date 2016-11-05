@@ -1,6 +1,5 @@
 package ca.digitalcave.logic.domain;
 
-import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.sat4j.core.VecInt;
@@ -17,14 +16,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Puzzle {
 	private static final Pattern PATTERN = Pattern.compile("(.+)(==|<>|!=)(.+)");
 	private final HashMap<String, List<String>> terms = new HashMap<>();
-	private final LinkedList<Clause> clauses = new LinkedList<>();
 	private final HashSet<Pair> solutionPairs = new HashSet<>();
 	private final ArrayList<Pair> validPairs = new ArrayList<>();
 	private final ISolver solver = SolverFactory.newDefault();
@@ -70,14 +67,14 @@ public class Puzzle {
 				solver.setTimeoutMs(1000);
 
 				// add the the valid pair combinations to the solver
-				for (Map.Entry<String, List<String>> e : terms.entrySet()) {
-					for (String a : e.getValue()) {
+				for (Map.Entry<String, List<String>> A : terms.entrySet()) {
+					for (String a : A.getValue()) {
 						final ArrayList<Pair> d = new ArrayList<>();
-						for (Map.Entry<String, List<String>> f : terms.entrySet()) {
-							if (e.getKey().equals(f.getKey())) continue; // same category
+						for (Map.Entry<String, List<String>> B : terms.entrySet()) {
+							if (A.getKey().equals(B.getKey())) continue; // same category
 							final ArrayList<Pair> c = new ArrayList<>();
-							for (int i = 0; i < f.getValue().size(); i++) {
-								final String b = f.getValue().get(i);
+							for (int i = 0; i < B.getValue().size(); i++) {
+								final String b = B.getValue().get(i);
 								final Pair pair = new Pair(a,b);
 								c.add(pair);
 								d.add(pair);
@@ -175,39 +172,7 @@ public class Puzzle {
 			}
 		}
 	}
-	
-	public void write(JsonGenerator g) throws IOException {
-		g.writeStartObject();
-		g.writeObjectFieldStart("dimensions");
-		for (Map.Entry<String, List<String>> group : terms.entrySet()) {
-			g.writeArrayFieldStart(group.getKey());
-			for (String term : group.getValue()) {
-				g.writeString(term);
-			}
-			g.writeEndArray();
-		}
-		g.writeEndObject();
-		g.writeArrayFieldStart("clauses");
-		for (Clause clause : clauses) {
-			g.writeStartArray();
-			g.writeString(clause.getPair().getA());
-			g.writeString(clause.getPair().getB());
-			g.writeBoolean(clause.isTruth());
-			g.writeEndArray();
-		}
-		g.writeEndArray();
-		g.writeArrayFieldStart("pairs");
-		for (Pair pair : solutionPairs) {
-			g.writeStartArray();
-			g.writeString(pair.getA());
-			g.writeString(pair.getB());
-			g.writeEndArray();
-		}
-		g.writeEndArray();
-		g.writeEndObject();
-		g.close();
-	}
-	
+
 	private VecInt toVecInt(List<Pair> l) {
 		final int[] result = new int[l.size()];
 		for (int i = 0; i < result.length; i++) {
@@ -220,9 +185,20 @@ public class Puzzle {
 		return solutionPairs;
 	}
 
-	public List<List<String>> getTuples() {
-		final List<List<String>> result = new ArrayList<>();
+	public Set<Set<String>> getTuples() {
 		// TODO
+		final Set<Set<String>> result = new HashSet<>();
+
+		for (Map.Entry<String, List<String>> A : terms.entrySet()) {
+			for (String a : A.getValue()) {
+				for (Map.Entry<String, List<String>> B : terms.entrySet()) {
+					if (A.getKey().equals(B.getKey())) continue; // same category
+					for (String b : B.getValue()) {
+
+					}
+				}
+			}
+		}
 		return result;
 	}
 }

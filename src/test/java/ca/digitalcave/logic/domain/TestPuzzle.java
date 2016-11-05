@@ -27,8 +27,8 @@ public class TestPuzzle {
         return Arrays.asList(new Object[][] {
             { "cd_buys.json" },
             { "present_time.json" },
-            { "light_work.json" }
-            //{ "zebra.json" },
+            { "light_work.json" },
+            { "zebra.json" },
         });
     }
 

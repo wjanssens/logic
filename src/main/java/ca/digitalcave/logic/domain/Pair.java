@@ -1,5 +1,8 @@
 package ca.digitalcave.logic.domain;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+
+import java.io.IOException;
 import java.util.Objects;
 
 public class Pair {
@@ -34,4 +37,11 @@ public class Pair {
 	public int hashCode() {
 		return a.compareTo(b) < 0 ? Objects.hash(a, b) : Objects.hash(b, a);
 	}
+
+    public void write(JsonGenerator g) throws IOException {
+		g.writeStartArray();
+		g.writeString(a);
+		g.writeString(b);
+		g.writeEndArray();
+    }
 }

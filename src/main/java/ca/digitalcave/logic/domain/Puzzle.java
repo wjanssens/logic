@@ -1,7 +1,7 @@
 package ca.digitalcave.logic.domain;
 
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
@@ -10,7 +10,6 @@ import org.sat4j.specs.TimeoutException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -20,9 +19,14 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.fasterxml.jackson.core.JsonToken.*;
+
 public class Puzzle {
 	private static final Pattern PATTERN = Pattern.compile("(.+)(==|<>|!=)(.+)");
-	private final LinkedHashMap<String, List<String>> terms = new LinkedHashMap<>();
+	private String name;
+	private String description;
+	private final LinkedList<String> instructions = new LinkedList<>();
+	private final LinkedHashMap<String, List<String>> dimensions = new LinkedHashMap<>();
 	private final HashSet<Pair> solutionPairs = new HashSet<>();
 	private final HashSet<Pair> expectedPairs = new HashSet<>();
 	private final List<List<String>> solutionTuples = new ArrayList<>();
@@ -34,14 +38,24 @@ public class Puzzle {
 
 		final LinkedList<String> stack = new LinkedList<>();
 
-		while (p.nextToken() != JsonToken.END_OBJECT && p.hasCurrentToken()) {
-			if ("dimensions".equals(p.getCurrentName())) {
+		while (p.nextToken() != END_OBJECT && p.hasCurrentToken()) {
+			if ("name".equals(p.getCurrentName())) {
+				name = p.nextTextValue();
+			} else if ("description".equals(p.getCurrentName())) {
+				description = p.nextTextValue();
+			} else if ("instructions".equals(p.getCurrentName())) {
+				while (p.nextToken() != END_ARRAY) {
+					if (p.getCurrentToken() == VALUE_STRING) {
+						instructions.add(p.getText());
+					}
+				}
+			} else if ("dimensions".equals(p.getCurrentName())) {
 				LinkedList<String> list = new LinkedList<>();
-				while (p.nextToken() != JsonToken.END_OBJECT) {
-					if (p.getCurrentToken() == JsonToken.FIELD_NAME) {
+				while (p.nextToken() != END_OBJECT) {
+					if (p.getCurrentToken() == FIELD_NAME) {
 						list = new LinkedList<>();
-						terms.put(p.getCurrentName(), list);
-					} else if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
+						dimensions.put(p.getCurrentName(), list);
+					} else if (p.getCurrentToken() == VALUE_STRING) {
 						list.add(p.getText());
 					}
 				}
@@ -49,9 +63,9 @@ public class Puzzle {
 				// now that we've seen all of the dimensions an their members
 				// create an array of all valid pair combination
 				// in this way each valid pair will have a unique index
-				for (Map.Entry<String, List<String>> e : terms.entrySet()) {
-					for (Map.Entry<String, List<String>> f : terms.entrySet()) {
-						if (e.getKey().equals(f.getKey())) continue; // terms from the same group cannot be valid solutionPairs
+				for (Map.Entry<String, List<String>> e : dimensions.entrySet()) {
+					for (Map.Entry<String, List<String>> f : dimensions.entrySet()) {
+						if (e.getKey().equals(f.getKey())) continue; // dimensions from the same group cannot be valid solutionPairs
 						for (String a : e.getValue()) {
 							for (String b : f.getValue()) {
 								if (a.equals(b)) {
@@ -71,10 +85,10 @@ public class Puzzle {
 				solver.setTimeoutMs(1000);
 
 				// add the the valid pair combinations to the solver
-				for (Map.Entry<String, List<String>> A : terms.entrySet()) {
+				for (Map.Entry<String, List<String>> A : dimensions.entrySet()) {
 					for (String a : A.getValue()) {
 						final ArrayList<Pair> d = new ArrayList<>();
-						for (Map.Entry<String, List<String>> B : terms.entrySet()) {
+						for (Map.Entry<String, List<String>> B : dimensions.entrySet()) {
 							if (A.getKey().equals(B.getKey())) continue; // same category
 							final ArrayList<Pair> c = new ArrayList<>();
 							for (int i = 0; i < B.getValue().size(); i++) {
@@ -85,21 +99,21 @@ public class Puzzle {
 							}
 							solver.addExactly(toVecInt(c), 1);
 						}
-						solver.addExactly(toVecInt(d), terms.size() - 1);
+						solver.addExactly(toVecInt(d), dimensions.size() - 1);
 					}
 				}
 			} else if ("cnf".equals(p.getCurrentName())) {
 				final ArrayList<Integer> indices = new ArrayList<>();
 				p.nextToken();
-				while (p.nextToken() != JsonToken.END_ARRAY) {
+				while (p.nextToken() != END_ARRAY) {
 					switch (p.getCurrentToken()) {
 						case VALUE_STRING:
 							solver.addClause(new VecInt(new int[] { tokenize(p.getText()) }));
 							break;
 						case START_ARRAY:
 							indices.clear();
-							while (p.nextToken() != JsonToken.END_ARRAY) {
-								if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
+							while (p.nextToken() != END_ARRAY) {
+								if (p.getCurrentToken() == VALUE_STRING) {
 									indices.add(tokenize(p.getText()));
 								}
 							}
@@ -107,21 +121,21 @@ public class Puzzle {
 							break;
 					}
 				}
-			} else if ("pairs".equals(p.getCurrentName())) {
-				while (p.nextToken() != JsonToken.END_ARRAY) {
-					while (p.nextToken() != JsonToken.END_ARRAY) {
-						if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
+			} else if ("expectedPairs".equals(p.getCurrentName()) || "pairs".equals(p.getCurrentName())) {
+				while (p.nextToken() != END_ARRAY) {
+					while (p.nextToken() != END_ARRAY) {
+						if (p.getCurrentToken() == VALUE_STRING) {
 							stack.add(p.getText());
 						}
 					}
 					expectedPairs.add(new Pair(stack.removeFirst(), stack.removeFirst()));
 					stack.clear();
 				}
-			} else if ("tuples".equals(p.getCurrentName())) {
-				while (p.nextToken() != JsonToken.END_ARRAY) {
+			} else if ("expectedTuples".equals(p.getCurrentName()) || "tuples".equals(p.getCurrentName())) {
+				while (p.nextToken() != END_ARRAY) {
 					final ArrayList<String> tuple = new ArrayList<>();
-					while (p.nextToken() != JsonToken.END_ARRAY) {
-						if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
+					while (p.nextToken() != END_ARRAY) {
+						if (p.getCurrentToken() == VALUE_STRING) {
 							tuple.add(p.getText());
 						}
 					}
@@ -129,6 +143,72 @@ public class Puzzle {
 				}
 			}
 		}
+	}
+
+	public void write(JsonGenerator g) throws IOException {
+		g.writeStartObject();
+
+		g.writeStringField("name", name);
+		g.writeStringField("description", description);
+		g.writeArrayFieldStart("instructions");
+		for (String instruction : instructions) {
+			g.writeString(instruction);
+		}
+		g.writeEndArray(); // instructions
+
+		g.writeObjectFieldStart("dimensions");
+		for (Map.Entry<String, List<String>> dimension : dimensions.entrySet()) {
+			g.writeArrayFieldStart(dimension.getKey());
+			for (String item : dimension.getValue()) {
+				g.writeString(item);
+			}
+			g.writeEndArray();
+		}
+		g.writeEndObject(); // dimensions
+
+		if (!solutionPairs.isEmpty()) {
+			g.writeArrayFieldStart("expectedPairs");
+			for (Pair pair : expectedPairs) {
+				pair.write(g);
+			}
+			g.writeEndArray(); // expectedPairs
+		}
+
+		if (!solutionPairs.isEmpty()) {
+			g.writeArrayFieldStart("solutionPairs");
+			for (Pair pair : solutionPairs) {
+				pair.write(g);
+			}
+			g.writeEndArray(); // solutionPairs
+		}
+
+		if (!expectedTuples.isEmpty()) {
+			g.writeArrayFieldStart("expectedTuples");
+			for (List<String> tuple : expectedTuples) {
+				g.writeStartArray();
+				for (String item : tuple) {
+					g.writeString(item);
+				}
+				g.writeEndArray();
+			}
+			g.writeEndArray(); // expectedTuples
+		}
+
+		if (!solutionTuples.isEmpty()) {
+			g.writeArrayFieldStart("solutionTuples");
+			for (List<String> tuple : solutionTuples) {
+				g.writeStartArray();
+				for (String item : tuple) {
+					g.writeString(item);
+				}
+				g.writeEndArray();
+			}
+			g.writeEndArray(); // expectedTuples
+		}
+
+		solver.get
+
+		g.writeEndObject();
 	}
 
 	private int tokenize(String string) {
@@ -156,13 +236,13 @@ public class Puzzle {
 
 		// TODO try to document this a bit better
 		// This rule says that if ab and ac then bc must also be true
-		// (a,b)&(a,c)=>(b,c) where a,b,c are from different term categories
-		for (Map.Entry<String, List<String>> A : terms.entrySet()) {
+		// (a,b)&(a,c)=>(b,c) where a,b,c are from different dimensions
+		for (Map.Entry<String, List<String>> A : dimensions.entrySet()) {
 			for (String a : A.getValue()) {
-				for (Map.Entry<String, List<String>> B : terms.entrySet()) {
+				for (Map.Entry<String, List<String>> B : dimensions.entrySet()) {
 					if (A.getKey().equals(B.getKey())) continue; // same category
 					for (String b : B.getValue()) {
-						for (Map.Entry<String, List<String>> C : terms.entrySet()) {
+						for (Map.Entry<String, List<String>> C : dimensions.entrySet()) {
 							if (A.getKey().equals(C.getKey())) continue; // same category
 							if (B.getKey().equals(C.getKey())) continue; // same category;
 							for (String c : C.getValue()) {
@@ -192,8 +272,8 @@ public class Puzzle {
 			// populate solution tuples
 			solutionTuples.clear();
 
-			final Map.Entry<String, List<String>> A = terms.entrySet().iterator().next();
-			solutionTuples.add(new ArrayList(terms.keySet()));
+			final Map.Entry<String, List<String>> A = dimensions.entrySet().iterator().next();
+			solutionTuples.add(new ArrayList<>(dimensions.keySet()));
 
 			for (String a : A.getValue()) {
 				// seed the result with a set for each value in the first category
@@ -201,7 +281,7 @@ public class Puzzle {
 				set.add(a);
 				solutionTuples.add(set);
 
-				for (Map.Entry<String, List<String>> B : terms.entrySet()) {
+				for (Map.Entry<String, List<String>> B : dimensions.entrySet()) {
 					if (A.getKey().equals(B.getKey())) continue; // same category
 					for (String b : B.getValue()) {
 						final Pair pair = new Pair(a, b);

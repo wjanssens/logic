@@ -1,11 +1,10 @@
 package ca.digitalcave.logic.resource;
 
-import java.io.IOException;
-import java.io.Writer;
-
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.map.MappingJsonFactory;
+import ca.digitalcave.logic.LogicApplication;
+import ca.digitalcave.logic.domain.Puzzle;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -16,8 +15,8 @@ import org.restlet.resource.ServerResource;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;
 
-import ca.digitalcave.logic.LogicApplication;
-import ca.digitalcave.logic.domain.Puzzle;
+import java.io.IOException;
+import java.io.Writer;
 
 public class SolverResource extends ServerResource {
 
@@ -34,10 +33,10 @@ public class SolverResource extends ServerResource {
 		}
 		
 		final LogicApplication application = (LogicApplication) getApplication();
-		final MappingJsonFactory jsonFactory = application.getJsonFactory();
+		final JsonFactory jsonFactory = application.getJsonFactory();
 		
 		try {
-			final JsonParser parser = jsonFactory.createJsonParser(entity.getReader());
+			final JsonParser parser = jsonFactory.createParser(entity.getReader());
 			
 			final Puzzle puzzle = new Puzzle(parser);
 			puzzle.solve();
@@ -45,15 +44,13 @@ public class SolverResource extends ServerResource {
 			return new WriterRepresentation(MediaType.APPLICATION_JSON) {
 				@Override
 				public void write(Writer w) throws IOException {
-					final JsonGenerator g = jsonFactory.createJsonGenerator(w);
+					final JsonGenerator g = jsonFactory.createGenerator(w);
 					//puzzle.write(g);  // TODO
 				}
 			};
 		} catch (IOException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());
-		} catch (ContradictionException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, e.getMessage());
-		} catch (TimeoutException e) {
+		} catch (ContradictionException | TimeoutException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, e.getMessage());
 		}
 	}

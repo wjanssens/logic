@@ -1,7 +1,6 @@
 package ca.digitalcave.logic.domain;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonParser;
+import com.fasterxml.jackson.core.JsonFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -13,7 +12,6 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 @RunWith(Parameterized.class)
@@ -42,7 +40,7 @@ public class TestPuzzle {
     @Test
     public void test() {
         try {
-            final Puzzle puzzle = new Puzzle(jsonFactory.createJsonParser(Puzzle.class.getResourceAsStream(name)));
+            final Puzzle puzzle = new Puzzle(jsonFactory.createParser(Puzzle.class.getResourceAsStream(name)));
 
             puzzle.solve();
 

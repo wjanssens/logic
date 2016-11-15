@@ -159,8 +159,8 @@ public class Puzzle {
 		g.writeObjectFieldStart("dimensions");
 		for (Map.Entry<String, List<String>> dimension : dimensions.entrySet()) {
 			g.writeArrayFieldStart(dimension.getKey());
-			for (String item : dimension.getValue()) {
-				g.writeString(item);
+			for (String term : dimension.getValue()) {
+				g.writeString(term);
 			}
 			g.writeEndArray();
 		}
@@ -186,8 +186,8 @@ public class Puzzle {
 			g.writeArrayFieldStart("expectedTuples");
 			for (List<String> tuple : expectedTuples) {
 				g.writeStartArray();
-				for (String item : tuple) {
-					g.writeString(item);
+				for (String term : tuple) {
+					g.writeString(term);
 				}
 				g.writeEndArray();
 			}
@@ -198,15 +198,13 @@ public class Puzzle {
 			g.writeArrayFieldStart("solutionTuples");
 			for (List<String> tuple : solutionTuples) {
 				g.writeStartArray();
-				for (String item : tuple) {
-					g.writeString(item);
+				for (String term : tuple) {
+					g.writeString(term);
 				}
 				g.writeEndArray();
 			}
 			g.writeEndArray(); // expectedTuples
 		}
-
-		solver.get
 
 		g.writeEndObject();
 	}

@@ -1,33 +1,27 @@
 package ca.digitalcave.logic;
 
-import java.io.InputStream;
-import java.util.Locale;
-import java.util.Properties;
-
-import org.codehaus.jackson.map.MappingJsonFactory;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.restlet.Application;
-import org.restlet.Component;
-import org.restlet.Context;
-import org.restlet.Request;
-import org.restlet.Restlet;
-import org.restlet.data.Method;
-import org.restlet.data.Protocol;
-import org.restlet.routing.Redirector;
-import org.restlet.routing.Router;
-
 import ca.digitalcave.logic.resource.DefaultResource;
 import ca.digitalcave.logic.resource.SolverResource;
+import com.fasterxml.jackson.core.JsonFactory;
 import freemarker.ext.beans.BeansWrapperBuilder;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
+import org.restlet.Application;
+import org.restlet.Component;
+import org.restlet.Restlet;
+import org.restlet.data.Protocol;
+import org.restlet.routing.Redirector;
+import org.restlet.routing.Router;
+
+import java.util.Locale;
+import java.util.Properties;
 
 public class LogicApplication extends Application {
 	
 	private static final Version FM_VERSION = new Version(2, 3, 21);
 	private final Properties properties = new Properties();
-	private final MappingJsonFactory jsonFactory = new MappingJsonFactory(new ObjectMapper());
+	private final JsonFactory jsonFactory = new JsonFactory();
 	private final Configuration fmConfig = new Configuration(FM_VERSION);
 
 	public static void main(String[] args) throws Exception {
@@ -48,10 +42,6 @@ public class LogicApplication extends Application {
 	
 	@Override
 	public synchronized void start() throws Exception {
-		final Object servletContext = getContext().getAttributes().get("org.restlet.ext.servlet.ServletContext");
-
-		jsonFactory.setCodec(new ObjectMapper());
-
 		/*
 		final String resource = "war:///WEB-INF/config.properties";
 		final InputStream is = getClass().getResourceAsStream("config.properties");
@@ -69,11 +59,7 @@ public class LogicApplication extends Application {
 		super.start();
 	}
 	
-	public ObjectMapper getObjectMapper() {
-		return jsonFactory.getCodec();
-	}
-	
-	public MappingJsonFactory getJsonFactory() {
+	public JsonFactory getJsonFactory() {
 		return jsonFactory;
 	}
 	

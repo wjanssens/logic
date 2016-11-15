@@ -15,13 +15,17 @@
 			<md-tab label="Problem">
 				<md-content class="md-padding">
 					<form>
-						<md-input-container class="md-block">
-							<label>Groups</label>
-							<textarea ng-model="model.problem.groupNames" ng-model-options="{ getterSetter: true }" columns="1" rows="5"></textarea>
-						</md-input-container>
+						<md-chips ng-model="model.problem.groups" name="group" readonly="false" md-removable="true"
+								  md-transform-chip="model.problem.newGroup($chip)">>
+							<md-chip-template>
+								<strong>{{$chip.name}}</strong>
+								<em>({{$chip.members.length}})</em>
+							</md-chip-template>
+						</md-chips>
 						<md-input-container ng-repeat="group in model.problem.groups" class="md-block">
 							<label>{{group.name}}</label>
-							<textarea ng-model="group.memberNames" ng-model-options="{ getterSetter: true }" columns="1" rows="5"></textarea>
+							<md-chips ng-model="group.members" name="member" readonly="false" md-removable="true">
+							</md-chips>
 						</md-input-container>
 					</form>
 				</md-content>

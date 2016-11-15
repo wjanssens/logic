@@ -2,54 +2,23 @@ function Group(name, members) {
         this.name = name;
         this.members = members;
 }
-Group.prototype.memberNames = function(members) {
-        if (arguments.length) {
-                // setter
-                this.members = members.split('\n');
-        } else {
-                // getter
-                return this.members.join('\n');
-        }
-}
 
 function Problem(problem) {
         this.groups = [];
         for (var k in problem) {
-                this.groups.push(new Group(k,problem[k]));
+            this.groups.push(new Group(k,problem[k]));
         }
 }
-Problem.prototype.groupNames = function(groups) {
-        if (arguments.length) {
-                // setter
-                var split = groups.split('\n');
-                while (this.groups.length > split.length) this.groups.pop();
-                for (var i in split) {
-                        if (this.groups.length <= i) {
-                                this.groups.push(new Group(split[i], []));
-                        } else {
-                                this.groups[i].name = split[i];
-                        }
-                }
-        } else {
-                // getter
-                var result = '';
-                for (var i in this.groups) {
-                        result += this.groups[i].name;
-                        result += '\n';
-                }
-                return result;
-        }
-}
-Problem.prototype.toJson = function() {
-        // TODO
+
+Problem.prototype.newGroup = function(name) {
+    return new Group(name,[]);
 }
 
 function Model(value) {
-        this.problem = new Problem(value.problem);
+        this.problem = new Problem(value.dimensions);
         //this.clauses = new Clauses(value.clauses);
         //this.solution = new Clauses(value.solution);
 }
-
 
 angular.module('Logic', ['ngMaterial'])
 .controller('LogicCtrl', function($scope) {
@@ -60,27 +29,24 @@ angular.module('Logic', ['ngMaterial'])
 
         // TODO replace all references to this value to the new model object
         $scope.value = {
-                "problem": {
-                        "Buyer": [
-                                "Glyn", "Harry", "Ian", "Jamie", "Kevin"
-                        ],
-                        "CD": [
-                                "Caught Out", "Friends", "Our World", "Wild Looks", "Yellow Moon"
-                        ],
-                        "Band": [
-                                "Girl Rock", "The Goods", "Headway", "Hi Pitch", "The Petals"
-                        ]
+                "dimensions": {
+                    "Friend": [ "Judy", "Michael", "Norma", "Robin" ],
+                    "Gift": [ "Book", "Chocolates", "Painting", "Vase" ],
+                    "Paper": [ "Blue", "Shiny", "White", "Yellow" ],
+                    "Bow": [ "Green", "Orange", "Pink", "Red" ]
                 },
-                "clauses": {
-                        "Buyer::Jamie||Band::Headway": true,
-                        "Buyer::Harry||CD::Our World": true,
-                        "CD::Caught Out||Band::Hi Pitch": true,
-                        "CD::Caught Out||Buyer::Glyn": false,
-                        "Band::Hi Pitch||Buyer::Glyn": false,
-                        "Buyer::Ian||CD::Wild Looks": true,
-                        "Buyer::Ian||Band::The Petals": false,
-                        "Band::Girl Rock||CD::Yellow Moon": true
-                }
+                "cnf": [
+                    "Vase == Yellow",
+                    "Vase != Judy",
+                    "Judy == Orange",
+                    "Shiny == Michael",
+                    "Michael != Book",
+                    "Painting == Norma",
+                    "White == Red",
+                    "Robin != Pink",
+                    "Judy != Yellow",
+                    "Orange != Yellow"
+                ],
         };
         $scope.model = new Model($scope.value);
 

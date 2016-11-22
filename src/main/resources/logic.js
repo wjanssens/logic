@@ -54,18 +54,18 @@ angular.module('Logic', ['ngMaterial'])
                 var ctx = canvas.getContext('2d');
                 ctx.textAlign = 'left';
 
-                var problem = $scope.value.problem;
-                var clauses = $scope.value.clauses;
+                var dimensions = $scope.value.dimensions;
+                var cnf = $scope.value.cnf;
 
                 var groupNames = [];
-                for (var groupName in problem) groupNames.push(groupName);
+                for (var groupName in dimensions) groupNames.push(groupName);
 
                 // compute the total height
                 var height = 100;
                 var gy = 0;
                 while (true) {
                         var ygroupName = groupNames[gy];
-                        var group = problem[ygroupName];
+                        var group = dimensions[ygroupName];
                         var sz = group.length * 20;
                         height += sz;
 
@@ -78,7 +78,7 @@ angular.module('Logic', ['ngMaterial'])
                 var width = 100;
                 for (var gx = 1; gx < groupNames.length; gx++) {
                         var groupName = groupNames[gx];
-                        var group = problem[groupName];
+                        var group = dimensions[groupName];
                         var sz = group.length * 20;
                         width += sz;
                 }
@@ -101,7 +101,7 @@ angular.module('Logic', ['ngMaterial'])
                 var gy = 0;
                 while (true) {
                         var groupName = groupNames[gy];
-                        var group = problem[groupName];
+                        var group = dimensions[groupName];
                         var sz = group.length * 20;
 
                         // side group name
@@ -139,7 +139,7 @@ angular.module('Logic', ['ngMaterial'])
                 // top: 1, 2 ... n
                 for (var gx = 1; gx < groupNames.length; gx++) {
                         var xgroupName = groupNames[gx];
-                        var xgroup = problem[xgroupName];
+                        var xgroup = dimensions[xgroupName];
                         var sz = xgroup.length * 20;
 
                         // top group name
@@ -172,14 +172,14 @@ angular.module('Logic', ['ngMaterial'])
                 var gy = 0;
                 while (true) {
                         var ygroupName = groupNames[gy];
-                        var ygroup = problem[ygroupName];
+                        var ygroup = dimensions[ygroupName];
                         var ysz = ygroup.length * 20;
 
                         var x = 100;
                         // top: 1, 2 ... n
                         for (var gx = 1; gx < groupNames.length; gx++) {
                                 var xgroupName = groupNames[gx];
-                                var xgroup = problem[xgroupName];
+                                var xgroup = dimensions[xgroupName];
                                 var xsz = group.length * 20;
 
                                 if (gy > 0 && gx > 1 && gx >= gy) continue;
@@ -221,21 +221,27 @@ angular.module('Logic', ['ngMaterial'])
                                 ctx.closePath();
 
                                 var dx = x;
-                                var clauses = this.value.clauses;
+                                var clauses = this.value.cnf;
                                 for (var i in xgroup) {
                                         var dy = y;
                                         for (var j in ygroup) {
-                                                var xitem = xgroupName + "::" + xgroup[i];
-                                                var yitem = ygroupName + "::" + ygroup[j];
+                                                var xitem = xgroup[i];
+                                                var yitem = ygroup[j];
 
-                                                var c0 = xitem + "||" + yitem;
-                                                var c1 = yitem + "||" + xitem;
-                                                if (clauses[c0] == true || clauses[c1] == true) {
+                                                var pc0 = xitem + "==" + yitem;
+                                                var pc1 = yitem + "==" + xitem;
+                                                var nc0 = xitem + "!=" + yitem;
+                                                var nc1 = yitem + "!=" + xitem;
+                                                var ipc0 = clauses.indexOf(pc0);
+                                                var ipc1 = clauses.indexOf(pc1);
+                                                var inc0 = clauses.indexOf(nc0);
+                                                var inc1 = clauses.indexOf(nc1);
+                                                if (ipc0 >= 0 || ipc1 >= 0) {
                                                         ctx.beginPath();
                                                         ctx.arc(dx+10, dy+10, 8, 0, 2 * Math.PI, false);
                                                         ctx.stroke();
                                                         ctx.closePath();
-                                                } else if (clauses[c0] == false || clauses[c1] == false) {
+                                                } else if (inc0 >= 0 || inc1 >= 0) {
                                                         ctx.beginPath();
                                                         ctx.moveTo(dx+2, dy+2);
                                                         ctx.lineTo(dx+18, dy+18);
@@ -262,28 +268,28 @@ angular.module('Logic', ['ngMaterial'])
         };
 
         $scope.click = function(evt) {
-                var evtx = evt.pageX - evt.target.offsetLeft;
-                var evty = evt.pageY - evt.target.offsetTop;
+                var evtx = evt.offsetX;
+                var evty = evt.offsetY;
 
-                var problem = $scope.value.problem;
-                var clauses = $scope.value.clauses;
+                var dimensions = $scope.value.dimensions;
+                var clauses = $scope.value.cnf;
 
                 var groupNames = [];
-                for (var groupName in problem) groupNames.push(groupName);
+                for (var groupName in dimensions) groupNames.push(groupName);
 
                 // group combinations
                 var y = 100;
                 var gy = 0;
                 while (true) {
                         var ygroupName = groupNames[gy];
-                        var ygroup = problem[ygroupName];
+                        var ygroup = dimensions[ygroupName];
                         var ysz = ygroup.length * 20;
 
                         var x = 100;
                         // top: 1, 2 ... n
                         for (var gx = 1; gx < groupNames.length; gx++) {
                                 var xgroupName = groupNames[gx];
-                                var xgroup = problem[xgroupName];
+                                var xgroup = dimensions[xgroupName];
                                 var xsz = xgroup.length * 20;
 
                                 if (gy > 0 && gx > 1 && gx >= gy) continue;
@@ -293,22 +299,28 @@ angular.module('Logic', ['ngMaterial'])
                                         var dy = y;
                                         for (var j in ygroup) {
                                                 if (evtx >= dx && evtx < dx + 20 && evty >= dy && evty < dy + 20) {
-                                                        var xitem = xgroupName + "::" + xgroup[i];
-                                                        var yitem = ygroupName + "::" + ygroup[j];
+                                                        var xitem = xgroup[i];
+                                                        var yitem = ygroup[j];
 
-                                                        var c0 = xitem + "||" + yitem;
-                                                        var c1 = yitem + "||" + xitem;
+                                                        var pc0 = xitem + "==" + yitem;
+                                                        var pc1 = yitem + "==" + xitem;
+                                                        var nc0 = xitem + "!=" + yitem;
+                                                        var nc1 = yitem + "!=" + xitem;
+                                                        var ipc0 = clauses.indexOf(pc0);
+                                                        var ipc1 = clauses.indexOf(pc1);
+                                                        var inc0 = clauses.indexOf(nc0);
+                                                        var inc1 = clauses.indexOf(nc1);
 
-                                                        if (clauses[c0] == true) {
-                                                                clauses[c0] = false;
-                                                        } else if (clauses[c1] == true) {
-                                                                clauses[c1] == false;
-                                                        } else if (clauses[c0] == false) {
-                                                                delete clauses[c0];
-                                                        } else if (clauses[c1] == false) {
-                                                                delete clauses[c1];
+                                                        if (ipc0 >= 0) {
+                                                                clauses[ipc0] = nc0; // positive to negative
+                                                        } else if (ipc1 >= 0) {
+                                                                clauses[ipc1] = nc0; // positive to negative
+                                                        } else if (inc0 >= 0) {
+                                                                delete clauses[inc0]; // negative to nothing
+                                                        } else if (inc1 >= 0) {
+                                                                delete clauses[inc1]; // negative to nothing
                                                         } else {
-                                                                clauses[c0] = true;
+                                                                clauses.push(pc0); // nothing to positive
                                                         }
 
                                                         $scope.draw(document.getElementById('logic'));

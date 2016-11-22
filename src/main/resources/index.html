@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="Logic">
 <head>
-	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0-rc5/angular-material.min.css"/>
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.1/angular-material.min.css"/>
 	<link rel="stylesheet" href="logic.css"/>
 	<meta charset="utf-8" />
 	<title>Logic</title>
@@ -15,16 +15,22 @@
 			<md-tab label="Problem">
 				<md-content class="md-padding">
 					<form>
-						<md-chips ng-model="model.problem.groups" name="group" readonly="false" md-removable="true"
-								  md-transform-chip="model.problem.newGroup($chip)">>
-							<md-chip-template>
-								<strong>{{$chip.name}}</strong>
-								<em>({{$chip.members.length}})</em>
-							</md-chip-template>
-						</md-chips>
+						<md-input-container class="md-block">
+							<label>Groups</label>
+							<md-chips ng-model="model.problem.groups" name="group" readonly="false"
+									  md-removable="true" md-enable-chip-edit="true"
+									  md-transform-chip="model.problem.newGroup($chip)">
+								<md-chip-template>
+									{{$chip.name}}
+									<em>({{$chip.members.length}})</em>
+								</md-chip-template>
+							</md-chips>
+						</md-input-container>
+
 						<md-input-container ng-repeat="group in model.problem.groups" class="md-block">
 							<label>{{group.name}}</label>
-							<md-chips ng-model="group.members" name="member" readonly="false" md-removable="true">
+							<md-chips ng-model="group.members" name="member" readonly="false"
+									  md-removable="true" md-enable-chip-edit="true">
 							</md-chips>
 						</md-input-container>
 					</form>
@@ -43,11 +49,11 @@
 	</md-content>
 </div>
 
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0-rc7/angular-material.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-animate.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-aria.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-messages.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.1/angular-material.min.js"></script>
 <script src="logic.js"></script>
 </body>
 </html>
